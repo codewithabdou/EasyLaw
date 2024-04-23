@@ -1,0 +1,89 @@
+import getSupremeCourtSearchResults from "@actions/getSupremeCourtSearchResults";
+import Navbar from "@components/user/layout/Navbar";
+import DecisionsList from "@components/user/search/DecisionsList";
+import { SearchTab } from "@components/user/search/SearchTab";
+import FirstPage from "@components/user/shared/FirstPage";
+
+const SearchPage = async ({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) => {
+  const search_type =
+    typeof searchParams?.search_type === "string"
+      ? searchParams.search_type
+      : "supreme_court";
+  const search_query =
+    typeof searchParams?.search_query === "string"
+      ? searchParams.search_query
+      : undefined;
+  const decision_number =
+    typeof searchParams?.decision_number === "string"
+      ? searchParams.decision_number
+      : undefined;
+  const decision_subject =
+    typeof searchParams?.decision_subject === "string"
+      ? searchParams.decision_subject
+      : undefined;
+  const start_date =
+    typeof searchParams?.start_date === "string"
+      ? searchParams.start_date
+      : undefined;
+  const end_date =
+    typeof searchParams?.end_date === "string"
+      ? searchParams.end_date
+      : undefined;
+  const search_field =
+    typeof searchParams?.search_field === "string"
+      ? searchParams.search_field
+      : undefined;
+
+  if (search_type === "supreme_court") {
+    const data = await getSupremeCourtSearchResults(
+      search_query,
+      decision_number,
+      {
+        from: start_date,
+        to: end_date,
+      },
+      decision_subject,
+      search_field,
+      1
+    );
+
+    const decisions = data?.data;
+
+    return (
+      <>
+        <Navbar />
+        <main className="pt-24 px-[5%]">
+          <FirstPage />
+          <SearchTab query={{ search_type }} />
+          <DecisionsList
+            query={{
+              search_query,
+              decision_number,
+              start_date,
+              end_date,
+              decision_subject,
+              search_field,
+            }}
+            initiaDecisions={decisions}
+          />
+        </main>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <Navbar />
+        <main className="pt-24 px-[5%]">
+          <FirstPage />
+          <SearchTab query={{ search_type }} />
+        </main>
+      </>
+    );
+  }
+};
+
+export default SearchPage;
