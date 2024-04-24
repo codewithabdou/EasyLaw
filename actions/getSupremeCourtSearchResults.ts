@@ -19,7 +19,6 @@ async function getSupremeCourtSearchResults(
     page
   );
   try {
-    console.log(query);
     const res = await fetch(query, {
       method: "GET",
 
@@ -30,7 +29,6 @@ async function getSupremeCourtSearchResults(
         tags: ["supreme-court-search"],
       },
     });
-    await new Promise((resolve) => setTimeout(resolve, 750));
     return res.json();
   } catch (error) {
     console.error(error);

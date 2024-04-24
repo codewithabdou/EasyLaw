@@ -7,6 +7,10 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+html {
+  scroll-behavior: smooth;
+}
 .primary-gradient {
   position: relative;
 }

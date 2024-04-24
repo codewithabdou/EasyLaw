@@ -5,14 +5,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { RiMenuFoldLine } from "react-icons/ri";
 import { ImCancelCircle } from "react-icons/im";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { link } from "fs";
 import { Button } from "@components/ui/button";
 
 const Navbar = () => {
-  const path = usePathname();
-
   const [open, setOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [showDiv, setShowDiv] = useState(true);

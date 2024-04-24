@@ -14,9 +14,9 @@ import React from "react";
 const DecisionCard = ({ decision }: { decision: SupremeCourtDecision }) => {
   return (
     <div>
-      <Card className="bg-slate-100 ">
+      <Card className="bg-slate-100 min-h-60 ">
         <CardHeader>
-          <CardTitle className="text-primary">{decision.reference}</CardTitle>
+          <CardTitle className="text-primary text-xl leading-normal">{`القرار رقم ${decision.number} الصادر بتاريخ ${decision.date}`}</CardTitle>
           <CardDescription>{decision.subject}</CardDescription>
         </CardHeader>
         <CardContent>

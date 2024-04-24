@@ -6,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 import getSupremeCourtSearchResults from "@/actions/getSupremeCourtSearchResults";
 import React from "react";
 import DecisionCard from "../shared/DecisionCard";
+import { set } from "date-fns";
 
 const DecisionsList = ({
   initiaDecisions,
@@ -46,6 +47,8 @@ const DecisionsList = ({
 
   useEffect(() => {
     setDecisions(initiaDecisions);
+    setPage(1);
+    setHasMore(true);
   }, [query]);
 
   useEffect(() => {
@@ -66,8 +69,8 @@ const DecisionsList = ({
   return (
     <>
       <div className="grid mt-8 gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {decisions?.map((decision, index) => {
-          return <DecisionCard key={index} decision={decision} />;
+        {decisions?.map((decision) => {
+          return <DecisionCard key={decision._id} decision={decision} />;
         })}
       </div>
       {hasMore && (

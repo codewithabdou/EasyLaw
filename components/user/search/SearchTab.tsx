@@ -20,7 +20,9 @@ export function SearchTab({
   return (
     <Tabs
       onValueChange={(value) => {
-        router.push(`/search?search_type=${value}`);
+        router.push(`/search?search_type=${value}`, {
+          scroll: false,
+        });
       }}
       defaultValue={query.search_type || "supreme_court"}
       className="pt-8"

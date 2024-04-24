@@ -3,7 +3,7 @@ import Navbar from "@components/user/layout/Navbar";
 import DecisionsList from "@components/user/search/DecisionsList";
 import { SearchTab } from "@components/user/search/SearchTab";
 import FirstPage from "@components/user/shared/FirstPage";
-
+import Footer from "@components/user/layout/Footer";
 const SearchPage = async ({
   searchParams,
 }: {
@@ -71,6 +71,7 @@ const SearchPage = async ({
             initiaDecisions={decisions}
           />
         </main>
+        <Footer />
       </>
     );
   } else {
@@ -81,6 +82,7 @@ const SearchPage = async ({
           <FirstPage />
           <SearchTab query={{ search_type }} />
         </main>
+        <Footer />
       </>
     );
   }

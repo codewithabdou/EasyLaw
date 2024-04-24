@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Arabic } from "next/font/google";
 import "@styles/globals.css";
+import Navigator from "@components/user/shared/Navigator";
 
 const noto = Noto_Sans_Arabic({ subsets: ["arabic"] });
 
@@ -16,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html dir="rtl" lang="ar">
-      <body className={noto.className}>{children}</body>
+      <body className={noto.className}>
+        {children}
+        <Navigator />
+      </body>
     </html>
   );
 }

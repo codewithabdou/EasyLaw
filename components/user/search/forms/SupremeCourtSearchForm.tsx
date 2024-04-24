@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { arSA } from "date-fns/locale";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@components/ui/switch";
 import { IoCalendar } from "react-icons/io5";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
@@ -34,62 +35,22 @@ import { formatDateToYYYYMMDD } from "@helpers/formatDate";
 
 const numbersRegEx = /^[0-9]*$/;
 
-const FormSchema = z
-  .object({
-    search_query: z.string().min(1, {
-      message: "يجب ألا يكون هذا الحقل فارغًا",
-    }),
-    haveDetailedSearch: z.boolean(),
-    decision_number: z
-      .string()
-      .regex(numbersRegEx, "من فضلك أدخل رقما صالحا")
-      .optional(),
-    date_range: z.object({
+const FormSchema = z.object({
+  search_query: z.string().optional(),
+  haveDetailedSearch: z.boolean(),
+  decision_number: z
+    .string()
+    .regex(numbersRegEx, "من فضلك أدخل رقما صالحا")
+    .optional(),
+  date_range: z
+    .object({
       from: z.date().optional(),
       to: z.date().optional(),
-    }),
-    decision_subject: z.string().optional(),
-    search_field: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.haveDetailedSearch) {
-        return data.decision_number !== "";
-      } else {
-        return true;
-      }
-    },
-    {
-      message: "يجب ألا يكون هذا الحقل فارغًا",
-      path: ["decision_number"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.haveDetailedSearch) {
-        return data.decision_subject !== "";
-      } else {
-        return true;
-      }
-    },
-    {
-      message: "يجب ألا يكون هذا الحقل فارغًا",
-      path: ["decision_subject"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.haveDetailedSearch) {
-        return data.search_field !== "";
-      } else {
-        return true;
-      }
-    },
-    {
-      message: "يجب ألا يكون هذا الحقل فارغًا",
-      path: ["search_field"],
-    }
-  );
+    })
+    .optional(),
+  decision_subject: z.string().optional(),
+  search_field: z.string().optional(),
+});
 
 export function SupremeCourtSearchForm({
   query,
@@ -97,8 +58,8 @@ export function SupremeCourtSearchForm({
   query: { search_type: string | undefined };
 }) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: undefined,
+    to: undefined,
   });
 
   const router = useRouter();
@@ -110,8 +71,8 @@ export function SupremeCourtSearchForm({
       haveDetailedSearch: false,
       decision_number: "",
       date_range: {
-        from: new Date(2022, 0, 20),
-        to: addDays(new Date(2022, 0, 20), 20),
+        from: undefined,
+        to: undefined,
       },
       decision_subject: "",
       search_field: "",
@@ -119,41 +80,26 @@ export function SupremeCourtSearchForm({
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (!data.haveDetailedSearch) {
-      router.push(
-        buildSearchLink(
-          query.search_type,
-          data.search_query,
-          undefined,
-          {
-            from: undefined,
-            to: undefined,
-          },
-          undefined,
-          undefined
-        ),
+    router.push(
+      buildSearchLink(
+        query.search_type,
+        data.search_query?.length !== 0 ? data.search_query : undefined,
+        data.decision_number?.length !== 0 ? data.decision_number : undefined,
         {
-          scroll: false,
-        }
-      );
-    } else {
-      router.replace(
-        buildSearchLink(
-          query.search_type,
-          data.search_query,
-          data.decision_number,
-          {
-            from: formatDateToYYYYMMDD(data.date_range.from),
-            to: formatDateToYYYYMMDD(data.date_range.to),
-          },
-          data.decision_subject,
-          data.search_field
-        ),
-        {
-          scroll: false,
-        }
-      );
-    }
+          from: data?.date_range?.from
+            ? formatDateToYYYYMMDD(data.date_range.from)
+            : undefined,
+          to: data?.date_range?.to
+            ? formatDateToYYYYMMDD(data.date_range.to)
+            : undefined,
+        },
+        data.decision_subject?.length !== 0 ? data.decision_subject : undefined,
+        data.search_field?.length !== 0 ? data.search_field : undefined
+      ),
+      {
+        scroll: false,
+      }
+    );
   }
 
   return (
@@ -236,15 +182,17 @@ export function SupremeCourtSearchForm({
                                   {format(date.to, "yyyy/LL/dd")}
                                 </>
                               ) : (
-                                format(date.from, "LLL dd, y")
+                                format(date.from, "yyyy/LL/dd")
                               )
                             ) : (
-                              <span>Pick a date</span>
+                              <span>تاريخ القرار</span>
                             )}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
+                            dir="rtl"
+                            locale={arSA}
                             initialFocus
                             mode="range"
                             defaultMonth={date?.from}
