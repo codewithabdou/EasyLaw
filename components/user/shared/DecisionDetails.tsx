@@ -45,10 +45,13 @@ const DecisionDetails = ({ decision }: { decision: SupremeCourtDecision }) => {
         </div>
       </div>
       <div className="space-y-6">
-        <div>
-          <p className="font-semibold text-lg text-[#316E83] ">المبدأ:</p>
-          <p className="text-[#2C3E54] font-medium">{decision.principle}</p>
-        </div>
+        {decision.principle && (
+          <div>
+            <p className="font-semibold text-lg text-[#316E83] ">المبدأ:</p>
+            <p className="text-[#2C3E54] font-medium">{decision.principle}</p>
+          </div>
+        )}
+
         <div>
           <p className="font-semibold text-lg text-[#316E83] ">
             وجه الطعن المثار من الطاعن المرتبط بالمبدأ:

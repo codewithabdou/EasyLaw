@@ -2,16 +2,28 @@
 
 import IMAGES from "@/config/images";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { RiMenuFoldLine } from "react-icons/ri";
 import { ImCancelCircle } from "react-icons/im";
 import Image from "next/image";
 import { Button } from "@components/ui/button";
+import {
+  getUserDataFromCookies,
+  logout,
+} from "@services/authentication.service";
+import { User2Icon } from "lucide-react";
 
 const Navbar = () => {
+  const [user, setUser] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [showDiv, setShowDiv] = useState(true);
+
+  useLayoutEffect(() => {
+    getUserDataFromCookies().then((data) => {
+      setUser(data);
+    });
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,11 +88,30 @@ const Navbar = () => {
                 ))}
               </div>
             </div>
-            <Link href="/">
-              <Button className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white">
-                تسجيل الدخول
-              </Button>
-            </Link>
+            {user ? (
+              <div className={`flex items-center gap-8`}>
+                <Link href="/profile">
+                  <div className="flex text-primary border-2 p-1 rounded-md border-primary items-center gap-4">
+                    <User2Icon />
+                  </div>
+                </Link>
+                <Button
+                  onClick={() => {
+                    logout();
+                    window.location.reload();
+                  }}
+                  className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white"
+                >
+                  تسجيل الخروج
+                </Button>
+              </div>
+            ) : (
+              <Link href="/auth/login">
+                <Button className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white">
+                  تسجيل الدخول
+                </Button>
+              </Link>
+            )}
           </div>
 
           <div
