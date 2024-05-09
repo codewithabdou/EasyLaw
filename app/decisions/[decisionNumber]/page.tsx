@@ -1,7 +1,7 @@
 import getSupremeCourtSearchResults from "@actions/getSupremeCourtSearchResults";
 import { Button } from "@components/ui/button";
 import Footer from "@components/user/layout/Footer";
-import Navbar from "@components/user/layout/Navbar";
+import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
 import DecisionDetails from "@components/user/shared/DecisionDetails";
 import SupremeCourtDecision from "@typings/SupremeCourtDecision";
 import { MdShare, MdDownload, MdCopyAll, MdSave, MdLink } from "react-icons/md";
@@ -36,7 +36,7 @@ const DecisionDetailsPage = async ({
 
   return (
     <>
-      <Navbar />
+      <ServerSideNavbar />
       <main className="pt-24 px-[5%]">
         <h1 className="text-primary py-4 font-bold text-4xl ">التفاصيل</h1>
         <div className="flex justify-end">

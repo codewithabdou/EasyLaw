@@ -4,6 +4,7 @@ import DecisionsList from "@components/user/search/DecisionsList";
 import { SearchTab } from "@components/user/search/SearchTab";
 import FirstPage from "@components/user/shared/FirstPage";
 import Footer from "@components/user/layout/Footer";
+import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
 const SearchPage = async ({
   searchParams,
 }: {
@@ -55,7 +56,7 @@ const SearchPage = async ({
 
     return (
       <>
-        <Navbar />
+        <ServerSideNavbar />
         <main className="pt-24 px-[5%]">
           <FirstPage />
           <SearchTab query={{ search_type }} />
@@ -77,7 +78,7 @@ const SearchPage = async ({
   } else {
     return (
       <>
-        <Navbar />
+        <ServerSideNavbar />
         <main className="pt-24 px-[5%]">
           <FirstPage />
           <SearchTab query={{ search_type }} />

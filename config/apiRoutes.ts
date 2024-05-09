@@ -4,6 +4,10 @@ const API_INFO = {
     LOGIN: "/auth/login",
     REGISTER: "/auth/register",
   },
+  USERS: {
+    GET_ALL: "/users",
+    GET_USER_BY_ID: (userId: string) => `/users/${userId}`,
+  },
 };
 
 export default API_INFO;

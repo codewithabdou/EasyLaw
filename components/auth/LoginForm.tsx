@@ -17,6 +17,7 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { GiCancel } from "react-icons/gi";
 const formSchema = loginFormSchema;
 
 export default function LoginForm() {
@@ -37,18 +38,23 @@ export default function LoginForm() {
     if (result.status !== "success") {
       toast.error("خطأ في التسجيل", {
         description: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
-        position: "bottom-right",
+        position: "bottom-left",
         dismissible: true,
         duration: 5000,
+        cancelButtonStyle: {
+          backgroundColor: "red",
+          color: "white",
+        },
         cancel: {
           label: "إلغاء",
           onClick: () => {
             toast.dismiss();
           },
         },
+        icon: <GiCancel className="text-lg text-red-500" />,
       });
     } else {
-      router.push(`/`);
+      router.replace("/");
       form.reset();
     }
     setIsLoading(false);

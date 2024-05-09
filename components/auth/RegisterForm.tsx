@@ -45,9 +45,13 @@ export default function RegisterForm() {
     if (result.status !== "success") {
       const resultError = result;
       toast.error("خطأ في التسجيل", {
-        description: "يرجى التحقق من البيانات التي ترسلها",
-        position: "bottom-right",
+        description: resultError.message,
+        position: "bottom-left",
         dismissible: true,
+        cancelButtonStyle: {
+          backgroundColor: "red",
+          color: "white",
+        },
         cancel: {
           label: "إلغاء",
           onClick: () => {
@@ -60,14 +64,19 @@ export default function RegisterForm() {
     if (result.status === "success") {
       toast.success("تم التسجيل بنجاح", {
         description: "الآن يمكنك تسجيل الدخول",
-        position: "top-right",
+        position: "bottom-left",
         dismissible: true,
+        cancelButtonStyle: {
+          backgroundColor: "green",
+          color: "white",
+        },
         cancel: {
           label: "تسجيل",
           onClick: () => {
             router.push("/auth/login");
           },
         },
+        icon: <MdDone className="text-lg text-green-500" />,
       });
       form.reset();
     }

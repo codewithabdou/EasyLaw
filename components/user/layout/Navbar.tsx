@@ -2,28 +2,23 @@
 
 import IMAGES from "@/config/images";
 import Link from "next/link";
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 import { RiMenuFoldLine } from "react-icons/ri";
 import { ImCancelCircle } from "react-icons/im";
 import Image from "next/image";
 import { Button } from "@components/ui/button";
-import {
-  getUserDataFromCookies,
-  logout,
-} from "@services/authentication.service";
+import { logout } from "@services/authentication.service";
 import { User2Icon } from "lucide-react";
+import { UserDataCookies } from "@typings/User";
 
-const Navbar = () => {
-  const [user, setUser] = useState<any>(null);
+const Navbar = ({
+  userDataCookies,
+}: {
+  userDataCookies: UserDataCookies | null;
+}) => {
   const [open, setOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [showDiv, setShowDiv] = useState(true);
-
-  useLayoutEffect(() => {
-    getUserDataFromCookies().then((data) => {
-      setUser(data);
-    });
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,29 +83,38 @@ const Navbar = () => {
                 ))}
               </div>
             </div>
-            {user ? (
-              <div className={`flex items-center gap-8`}>
+            {userDataCookies ? (
+              <div className={`flex items-center justify-center gap-6`}>
                 <Link href="/profile">
                   <div className="flex text-primary border-2 p-1 rounded-md border-primary items-center gap-4">
                     <User2Icon />
                   </div>
                 </Link>
-                <Button
-                  onClick={() => {
-                    logout();
-                    window.location.reload();
-                  }}
-                  className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white"
-                >
-                  تسجيل الخروج
-                </Button>
+                <Link href="/">
+                  <Button
+                    onClick={() => logout()}
+                    className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white"
+                  >
+                    تسجيل الخروج
+                  </Button>
+                </Link>
               </div>
             ) : (
-              <Link href="/auth/login">
-                <Button className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white">
-                  تسجيل الدخول
-                </Button>
-              </Link>
+              <div className="flex items-center justify-center gap-6">
+                <Link href="/auth/login">
+                  <Button className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white">
+                    تسجيل الدخول
+                  </Button>
+                </Link>
+                <Link href="/auth/register">
+                  <Button
+                    variant={"outline"}
+                    className="text-primary border-primary"
+                  >
+                    إنشاء حساب
+                  </Button>
+                </Link>
+              </div>
             )}
           </div>
 
@@ -156,13 +160,40 @@ const Navbar = () => {
                   </Link>
                 ))}
               </div>
-              <div className="flex  my-4 gap-4 items-center justify-center">
-                <Link href="/">
-                  <Button className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white">
-                    تسجيل الدخول
-                  </Button>
-                </Link>
-              </div>
+
+              {userDataCookies ? (
+                <div className="flex items-center justify-center gap-6">
+                  <Link href="/profile">
+                    <div className="flex text-primary border-2 p-1 rounded-md border-primary items-center gap-4">
+                      <User2Icon />
+                    </div>
+                  </Link>
+                  <Link href="/">
+                    <Button
+                      onClick={() => logout()}
+                      className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white"
+                    >
+                      تسجيل الخروج
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-6">
+                  <Link href="/auth/register">
+                    <Button
+                      variant={"outline"}
+                      className="text-primary border-primary"
+                    >
+                      إنشاء حساب
+                    </Button>
+                  </Link>
+                  <Link href="/auth/login">
+                    <Button className="text-white transition-all duration-300 border-[1px] bg-primary hover:border-primary hover:text-primary hover:bg-white">
+                      تسجيل الدخول
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </nav>
