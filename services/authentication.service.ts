@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import API_INFO from "@config/apiRoutes";
-import { UserDataCookies } from "@typings/User";
+import { User, UserDataCookies } from "@typings/User";
 
 async function login(formData: any) {
   try {
@@ -22,13 +22,15 @@ async function login(formData: any) {
     const data = await response.json();
     cookies().set("userToken", data.token);
     cookies().set("userId", data.userId);
-    const user = await getLoggedInUserInfo();
-    cookies().set("role", user.role);
-    if (user.active) {
-      return {
-        status: "success",
-        message: user.role,
-      };
+    const user: User | null = await getLoggedInUserInfo();
+    if (user) {
+      cookies().set("role", user.role);
+      if (user.active) {
+        return {
+          status: "success",
+          message: user.role,
+        };
+      }
     } else {
       return {
         status: "error",
@@ -105,7 +107,7 @@ async function getUserDataFromCookies(): Promise<UserDataCookies | null> {
   };
 }
 
-async function getLoggedInUserInfo() {
+async function getLoggedInUserInfo(): Promise<User | null> {
   const userId = cookies().get("userId")?.value;
   if (!userId || userId.length === 0 || userId === undefined) {
     return null;

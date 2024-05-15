@@ -1,6 +1,6 @@
 const routesAuthorization: Record<string, string[]> = {
   user: ["/search"],
-  admin: ["/admin"],
+  admin: ["/admin/dashboard"],
   moderator: ["/moderator"],
 };
 

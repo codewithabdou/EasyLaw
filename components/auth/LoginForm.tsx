@@ -35,7 +35,7 @@ export default function LoginForm() {
     setIsLoading(true);
     const result = await login(values);
     console.log(result);
-    if (result.status !== "success") {
+    if (result?.status !== "success") {
       toast.error("خطأ في التسجيل", {
         description: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
         position: "bottom-left",
@@ -54,8 +54,11 @@ export default function LoginForm() {
         icon: <GiCancel className="text-lg text-red-500" />,
       });
     } else {
-      router.replace("/admin/dashboard");
-      form.reset();
+      if (result?.message === "user") {
+        router.push("/");
+      } else if (result?.message === "admin") {
+        router.push("/admin/dashboard");
+      }
     }
     setIsLoading(false);
   }
