@@ -34,5 +34,6 @@ function redirectToNotFound(url: URL): NextResponse {
 }
 
 export const config = {
-  matcher: ["/search", "/auth/login", "/auth/register", "/admin"],
+  // matcher: ["/search", "/auth/login", "/auth/register", "/admin"],
+  matcher: [],
 };

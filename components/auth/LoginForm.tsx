@@ -54,7 +54,7 @@ export default function LoginForm() {
         icon: <GiCancel className="text-lg text-red-500" />,
       });
     } else {
-      router.replace("/");
+      router.replace("/admin/dashboard");
       form.reset();
     }
     setIsLoading(false);
