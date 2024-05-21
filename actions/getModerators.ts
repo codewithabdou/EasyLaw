@@ -5,10 +5,10 @@ import buildGetUsersRequest from "@helpers/buildGetUsers";
 import { User } from "@typings/User";
 import { cookies } from "next/headers";
 
-async function getUsers(): Promise<User[] | null> {
+async function getModerators(): Promise<User[] | null> {
   const getUsersQuery: string = buildGetUsersRequest({
     active: undefined,
-    role: "user",
+    role: "moderator",
     lastname: undefined,
     firstname: undefined,
     email: undefined,
@@ -35,4 +35,4 @@ async function getUsers(): Promise<User[] | null> {
   }
 }
 
-export default getUsers;
+export default getModerators;

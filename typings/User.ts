@@ -1,7 +1,6 @@
 export type UserDataCookies = {
-  userId: string;
   token: string;
-  role: string;
+  user: User;
 };
 
 export type User = {

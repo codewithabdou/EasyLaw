@@ -25,7 +25,7 @@ const deactivateUser = async (userId: string) => {
   await modifyUser({ active: false }, userId);
 };
 
-const AdminUsersColumns = (): ColumnDef<User>[] => {
+const AdminModeratorsColumns = (): ColumnDef<User>[] => {
   const columns: ColumnDef<User>[] = [
     {
       accessorKey: "الحالة",
@@ -90,7 +90,7 @@ const AdminUsersColumns = (): ColumnDef<User>[] => {
                   navigator.clipboard.writeText(user.id.toString())
                 }
               >
-                نسخ معرف المستخدم
+                نسخ معرف المسير
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {user.active ? (
@@ -118,4 +118,4 @@ const AdminUsersColumns = (): ColumnDef<User>[] => {
   return columns;
 };
 
-export default AdminUsersColumns;
+export default AdminModeratorsColumns;

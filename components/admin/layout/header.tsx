@@ -9,7 +9,7 @@ import useScroll from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import IMAGES from "@config/images";
-import { User } from "@typings/User";
+import { User, UserDataCookies } from "@typings/User";
 
 const Header = ({ user }: { user: User | null }) => {
   const scrolled = useScroll(5);

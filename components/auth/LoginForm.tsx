@@ -58,6 +58,8 @@ export default function LoginForm() {
         router.push("/");
       } else if (result?.message === "admin") {
         router.push("/admin/dashboard");
+      } else if (result?.message === "moderator") {
+        router.push("/moderator/dashboard");
       }
     }
     setIsLoading(false);

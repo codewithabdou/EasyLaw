@@ -1,9 +1,11 @@
 import React from "react";
 import Header from "./header";
-import { getLoggedInUserInfo } from "@services/authentication.service";
+import { getUserDataFromCookies } from "@services/authentication.service";
 
 const HeaderUserActions = async () => {
-  const user = await getLoggedInUserInfo();
+  const userDataCookies = await getUserDataFromCookies();
+  if (!userDataCookies) return null;
+  const user = userDataCookies?.user;
 
   return <Header user={user} />;
 };

@@ -20,11 +20,12 @@ async function login(formData: any) {
       };
     }
     const data = await response.json();
-    cookies().set("userToken", data.token);
-    cookies().set("userId", data.userId);
+    cookies().set("token", data.token);
+    cookies().set("id", data.userId);
     const user: User | null = await getLoggedInUserInfo();
+    console.log(user);
     if (user) {
-      cookies().set("role", user.role);
+      cookies().set("user", JSON.stringify(user));
       if (user.active) {
         return {
           status: "success",
@@ -32,6 +33,7 @@ async function login(formData: any) {
         };
       }
     } else {
+      logout();
       return {
         status: "error",
         message: "حسابك غير مفعل. يرجى التواصل مع الإدارة",
@@ -46,9 +48,9 @@ async function login(formData: any) {
 }
 
 async function logout() {
-  cookies().set("role", "");
-  cookies().set("userToken", "");
-  cookies().set("userId", "");
+  cookies().delete("user");
+  cookies().delete("token");
+  cookies().delete("id");
 }
 
 async function register(formData: any) {
@@ -84,42 +86,38 @@ async function register(formData: any) {
 }
 
 async function getUserDataFromCookies(): Promise<UserDataCookies | null> {
-  const userId = cookies().get("userId")?.value;
-  const role = cookies().get("role")?.value;
-  const userToken = cookies().get("userToken")?.value;
+  const user = cookies().get("user")?.value;
+  const userToken = cookies().get("token")?.value;
   if (
-    userId === undefined ||
-    userId === null ||
-    userId.length === 0 ||
-    role === undefined ||
-    role === null ||
-    role.length === 0 ||
+    user === undefined ||
+    user === null ||
+    user.length === 0 ||
     userToken === undefined ||
     userToken === null ||
     userToken.length === 0
   ) {
     return null;
   }
+  const userObj: User = JSON.parse(user);
   return {
-    userId,
-    role,
+    user: userObj,
     token: userToken,
   };
 }
 
 async function getLoggedInUserInfo(): Promise<User | null> {
-  const userId = cookies().get("userId")?.value;
-  if (!userId || userId.length === 0 || userId === undefined) {
+  const userId = cookies().get("id")?.value;
+  if (userId === undefined || userId === null || userId.length === 0) {
     return null;
   }
   try {
     const response = await fetch(
-      `${API_INFO.BASE_URL}${API_INFO.USERS.GET_USER_BY_ID(userId)}`,
+      `${API_INFO.BASE_URL}${API_INFO.USERS.GET_USER_BY_ID(userId as string)}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${cookies().get("userToken")?.value}`,
+          Authorization: `Bearer ${cookies().get("token")?.value}`,
         },
       }
     );
