@@ -9,6 +9,9 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SupremeCourtSearchForm from "./forms/SupremeCourtSearchForm";
+import ConstitutionSearchForm from "./forms/ConstitutionSearchForm";
+import ConseilSearchForm from "./forms/ConseilSearchForm";
+
 import { useRouter } from "next/navigation";
 
 export function SearchTab({
@@ -27,29 +30,38 @@ export function SearchTab({
       defaultValue={query.search_type || "supreme_court"}
       className="pt-8"
     >
-      <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="free_search">البحث الحر</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-4">
+        <TabsTrigger value="conseil">الإجتهاد القضائي</TabsTrigger>
         <TabsTrigger value="jarida_rassmia">الجريدة الرسمية</TabsTrigger>
         <TabsTrigger value="supreme_court">المحكمة العليا</TabsTrigger>
+        <TabsTrigger value="constitution">الدستور</TabsTrigger>
       </TabsList>
-      <TabsContent value="free_search">
+
+
+      <TabsContent value="conseil">
         <Card>
           <CardHeader>
-            <CardTitle>البحث الحر</CardTitle>
-            <CardDescription>البحث الحر</CardDescription>
+            <CardTitle>الإجتهاد القضائي</CardTitle>
+            <CardDescription>الإجتهاد القضائي</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2"></CardContent>
+          <CardContent>
+            <ConseilSearchForm query={query} />
+          </CardContent>
         </Card>
       </TabsContent>
+
+
       <TabsContent value="jarida_rassmia">
         <Card>
           <CardHeader>
             <CardTitle>الجريدة الرسمية</CardTitle>
             <CardDescription>الجريدة الرسمية</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2"></CardContent>
+
         </Card>
       </TabsContent>
+
+
       <TabsContent value="supreme_court">
         <Card className="bg-slate-100">
           <CardHeader>
@@ -61,6 +73,20 @@ export function SearchTab({
           </CardContent>
         </Card>
       </TabsContent>
+
+      <TabsContent value="constitution">
+        <Card className="bg-slate-100">
+          <CardHeader>
+            <CardTitle>الدستور</CardTitle>
+            <CardDescription>الدستور</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ConstitutionSearchForm query={query} /> 
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+
     </Tabs>
   );
 }

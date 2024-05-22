@@ -1,10 +1,16 @@
 import getSupremeCourtSearchResults from "@actions/getSupremeCourtSearchResults";
+import getConstitutionResults from "@actions/getConstitutionResults";
+import getConseilSearchResults from "@actions/getConseilSearchResults";
+
 import Navbar from "@components/user/layout/Navbar";
 import DecisionsList from "@components/user/search/DecisionsList";
+import DecisionListConstitution from "@components/user/search/DecisionListConstitution";
+import DecisionListConseil from "@components/user/search/DecisionListConseil";
 import { SearchTab } from "@components/user/search/SearchTab";
 import FirstPage from "@components/user/shared/FirstPage";
 import Footer from "@components/user/layout/Footer";
 import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
+
 const SearchPage = async ({
   searchParams,
 }: {
@@ -39,6 +45,80 @@ const SearchPage = async ({
       ? searchParams.search_field
       : undefined;
 
+
+  typeof searchParams?.search_type === "string"
+    ? searchParams.search_type
+    : "constitution";
+
+
+  const section_number =
+    typeof searchParams?.section_number === "string"
+      ? searchParams.section_number
+      : undefined;
+  const section_name =
+    typeof searchParams?.section_name === "string"
+      ? searchParams.section_name
+      : undefined;
+  const chapter_number =
+    typeof searchParams?.chapter_number === "string"
+      ? searchParams.chapter_number
+      : undefined;
+  const chapter_name =
+    typeof searchParams?.chapter_name === "string"
+      ? searchParams.chapter_name
+      : undefined;
+  const article_number =
+    typeof searchParams?.article_number === "string"
+      ? searchParams.article_number
+      : undefined;
+
+
+  typeof searchParams?.search_type === "string"
+    ? searchParams.search_type
+    : "conseil";
+  const number =
+    typeof searchParams?.number === "string"
+      ? searchParams.number
+      : undefined;
+  
+  const chamber =
+    typeof searchParams?.chamber === "string"
+      ? searchParams.chamber
+      : undefined;
+
+
+  const section =
+    typeof searchParams?.section === "string"
+      ? searchParams.section
+      : undefined;
+  const procedure =
+    typeof searchParams?.procedure === "string"
+      ? searchParams.procedure
+      : undefined;
+  const subject =
+    typeof searchParams?.subject === "string"
+      ? searchParams.subject
+      : undefined;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   if (search_type === "supreme_court") {
     const data = await getSupremeCourtSearchResults(
       search_query,
@@ -53,7 +133,6 @@ const SearchPage = async ({
     );
 
     const decisions = data?.data;
-
     return (
       <>
         <ServerSideNavbar />
@@ -75,7 +154,122 @@ const SearchPage = async ({
         <Footer />
       </>
     );
-  } else {
+  }
+
+
+
+
+
+
+ 
+
+  if (search_type === "constitution") {
+    const data = await getConstitutionResults(
+      search_query,
+      section_number,
+      section_name,
+      chapter_number,
+      chapter_name,
+      article_number,
+      1
+    );
+
+    const decisions = data?.data;
+
+
+
+
+    return (
+      <>
+        <ServerSideNavbar />
+        <main className="pt-24 px-[5%]">
+          <FirstPage />
+          <SearchTab query={{ search_type }} />
+          <DecisionListConstitution
+            query={{
+              search_query,
+              section_number,
+              section_name,
+              chapter_number,
+              chapter_name,
+              article_number,
+            }}
+            initiaDecisions={decisions}
+          />
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  if (search_type === "conseil") {
+    const data = await getConseilSearchResults(
+      search_query,
+      number,
+      {
+        from: start_date,
+        to: end_date,
+      },
+      chamber,
+      section,
+      procedure,
+      subject,
+      1
+    );
+
+    const decisions = data?.data;
+
+
+
+
+    return (
+      <>
+        <ServerSideNavbar />
+        <main className="pt-24 px-[5%]">
+          <FirstPage />
+          <SearchTab query={{ search_type }} />
+          <DecisionListConseil
+            query={{
+              search_query,
+              number,
+              start_date,
+              end_date,
+              chamber,
+              section,
+              procedure,
+              subject
+            }}
+            initiaDecisions={decisions}
+          />
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+
+
+
+
+
+
+
+  
+  
+  
+  else {
     return (
       <>
         <ServerSideNavbar />
