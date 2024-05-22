@@ -23,7 +23,6 @@ async function login(formData: any) {
     cookies().set("token", data.token);
     cookies().set("id", data.userId);
     const user: User | null = await getLoggedInUserInfo();
-    console.log(user);
     if (user) {
       cookies().set("user", JSON.stringify(user));
       if (user.active) {
@@ -33,7 +32,7 @@ async function login(formData: any) {
         };
       }
     } else {
-      logout();
+      await logout();
       return {
         status: "error",
         message: "حسابك غير مفعل. يرجى التواصل مع الإدارة",
@@ -51,6 +50,13 @@ async function logout() {
   cookies().delete("user");
   cookies().delete("token");
   cookies().delete("id");
+}
+
+async function refreshDataCookies() {
+  const user = await getLoggedInUserInfo();
+  if (user) {
+    cookies().set("user", JSON.stringify(user));
+  }
 }
 
 async function register(formData: any) {
@@ -131,4 +137,11 @@ async function getLoggedInUserInfo(): Promise<User | null> {
   }
 }
 
-export { login, logout, register, getUserDataFromCookies, getLoggedInUserInfo };
+export {
+  login,
+  logout,
+  register,
+  getUserDataFromCookies,
+  getLoggedInUserInfo,
+  refreshDataCookies,
+};

@@ -34,7 +34,6 @@ export default function LoginForm() {
   async function onSubmit(values: loginRequest) {
     setIsLoading(true);
     const result = await login(values);
-    console.log(result);
     if (result?.status !== "success") {
       toast.error("خطأ في التسجيل", {
         description: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
@@ -55,11 +54,11 @@ export default function LoginForm() {
       });
     } else {
       if (result?.message === "user") {
-        router.push("/");
+        window.location.replace("/");
       } else if (result?.message === "admin") {
-        router.push("/admin/dashboard");
+        window.location.replace("/admin/dashboard");
       } else if (result?.message === "moderator") {
-        router.push("/moderator/dashboard");
+        window.location.replace("/moderator/dashboard");
       }
     }
     setIsLoading(false);
