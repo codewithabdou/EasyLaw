@@ -1,7 +1,7 @@
 import React from "react";
-import { BiUser } from "react-icons/bi";
+import { BiMoney, BiUser } from "react-icons/bi";
 import { MdDashboard } from "react-icons/md";
-import { RiAdminLine } from "react-icons/ri";
+import { RiAdminLine, RiMoneyCnyBoxFill } from "react-icons/ri";
 
 const ADMIN_SIDENAV_ITEMS = [
   {
@@ -18,6 +18,11 @@ const ADMIN_SIDENAV_ITEMS = [
     title: "المسيرين",
     path: "/admin/moderators",
     icon: <RiAdminLine size={25} />,
+  },
+  {
+    title: "العروض",
+    path: "/admin/tarification",
+    icon: <BiMoney size={25} />,
   },
 ];
 
