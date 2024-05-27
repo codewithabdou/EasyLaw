@@ -45,21 +45,23 @@ async function page() {
 
    <ServerSideNavbar/>
     <div className="text-primary mt-24 p-5 flex items-center flex-col gap-y-5">
-        <div className='w-full   flex justify-around  items-center'>
-           <div className='w-1/3 flex flex-col gap-y-16'>
-              <h1 className='md:text-4xl text-2xl text-primary font-bold'>قبل البدء، يجب عليك اختيار
+      <div className="grid  grid-cols-1 lg:grid-cols-2 px-5">
+      <div className='space-y-6  order-2 lg:order-1'>
+              <h1 className='text-4xl lg:text-5xl lg:leading-relaxed leading-normal text-primary font-bold'>قبل البدء، يجب عليك اختيار
  الاشتراك الذي يناسبك!</h1>
-              <p className='md:text-lg text-sm text-[#316E83]'>اختر من بين مجموعة متنوعة من الاشتراكات حسب احتياجاتك.</p>
+              <p className='text-[#468590] max-w-[40ch] font-medium text-xl'>اختر من بين مجموعة متنوعة من الاشتراكات حسب احتياجاتك.</p>
            </div>
+           <div className="relative order-1 lg:order-2 min-h-[40vh] lg:min-h-[50vh]">
            <Image 
-           className='md:w-80 md:h-80 w-48 h-48'
+           className="object-contain w-80 h-80" alt="" fill
            src={IMAGES.CASH_ILLUSTRATION}
-         width={350}
-         height={350}
-         alt='bills'>
+        >
 
          </Image>
-        </div>
+           </div>
+           
+      </div>
+       
         <div className='bg-primary w-[80%] h-7 rounded-t-[20px]'></div>
         <h1 className='md:text-3xl text-xl font-bold'>عروضنا <span className='text-[#316E83]'>المتوفرة</span></h1>
 
