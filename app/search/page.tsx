@@ -10,6 +10,8 @@ import { SearchTab } from "@components/user/search/SearchTab";
 import FirstPage from "@components/user/shared/FirstPage";
 import Footer from "@components/user/layout/Footer";
 import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
+import getLawSearchResults from "@actions/getLawSearchResults";
+import DecisionListLaw from "@components/user/search/DecisionListLaw";
 
 const SearchPage = async ({
   searchParams,
@@ -101,18 +103,46 @@ const SearchPage = async ({
       : undefined;
 
 
+  typeof searchParams?.search_type === "string"
+    ? searchParams.search_type
+    : "laws";
 
+const field =
+  typeof searchParams?.field === "string"
+    ? searchParams.field
+      : undefined;
 
+const ministry =
+  typeof searchParams?.ministry === "string"
+    ? searchParams.ministry
+      : undefined;
 
+const text_number =
+  typeof searchParams?.text_number === "string"
+    ? searchParams.text_number
+      : undefined;
 
+const text_type =
+  typeof searchParams?.text_type === "string"
+    ? searchParams.text_type
+      : undefined;
 
-
-
-
-
-
-
-
+  const journal_start_date =
+    typeof searchParams?.journal_start_date === "string"
+      ? searchParams.journal_start_date
+      : undefined;
+  const journal_end_date =
+    typeof searchParams?.journal_end_date === "string"
+      ? searchParams.journal_end_date
+      : undefined;
+  const signature_start_date =
+    typeof searchParams?.signature_start_date === "string"
+      ? searchParams.signature_start_date
+      : undefined;
+  const signature_end_date =
+    typeof searchParams?.signature_end_date === "string"
+      ? searchParams.signature_end_date
+      : undefined;
 
 
 
@@ -258,6 +288,77 @@ const SearchPage = async ({
       </>
     );
   }
+
+
+
+ 
+
+
+  if (search_type === "laws") {
+    const data = await getLawSearchResults(
+      search_query,
+      field,
+      ministry,
+      text_number,
+      text_type,
+      {
+        from: journal_start_date,
+        to: journal_end_date,
+      },
+      {
+        from: signature_start_date,
+        to: signature_end_date,
+      },
+      1
+    );
+
+    const decisions = data?.data;
+
+
+
+
+    return (
+      <>
+        <ServerSideNavbar />
+        <main className="pt-24 px-[5%]">
+          <FirstPage />
+          <SearchTab query={{ search_type }} />
+          <DecisionListLaw
+            query={{
+              search_query,
+              field,
+              ministry,
+              text_number,
+              text_type,
+              journal_start_date,
+              journal_end_date,
+              signature_start_date,
+              signature_end_date
+            }}
+            initiaDecisions={decisions}
+          />
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

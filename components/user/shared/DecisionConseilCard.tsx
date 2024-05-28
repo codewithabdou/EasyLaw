@@ -11,7 +11,7 @@ import ConseilDecision from "@typings/ConseilDecision";
 import Link from "next/link";
 import React from "react";
 
-const DecisionConstitutionCard = ({ decision }: { decision: ConseilDecision }) => {
+const DecisionConseilCard = ({ decision }: { decision: ConseilDecision }) => {
     return (
         <div>
             <Card className="bg-slate-100 min-h-60 ">
@@ -32,7 +32,7 @@ const DecisionConstitutionCard = ({ decision }: { decision: ConseilDecision }) =
                 </CardContent>
                 <CardFooter>
                     <Button variant={"outline"}>
-                        <Link href={`/decisions/${decision._id}`}>اقرأ المزيد</Link>
+                        <Link href={`/conseil/${decision.number}`}>اقرأ المزيد</Link>
                     </Button>
                 </CardFooter>
             </Card>
@@ -40,6 +40,6 @@ const DecisionConstitutionCard = ({ decision }: { decision: ConseilDecision }) =
     );
 };
 
-export default DecisionConstitutionCard;
+export default DecisionConseilCard;
 
 

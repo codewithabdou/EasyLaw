@@ -13,6 +13,7 @@ import ConstitutionSearchForm from "./forms/ConstitutionSearchForm";
 import ConseilSearchForm from "./forms/ConseilSearchForm";
 
 import { useRouter } from "next/navigation";
+import LawSearchForm from "./forms/LawSearchForm";
 
 export function SearchTab({
   query,
@@ -32,7 +33,7 @@ export function SearchTab({
     >
       <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="conseil">الإجتهاد القضائي</TabsTrigger>
-        <TabsTrigger value="jarida_rassmia">الجريدة الرسمية</TabsTrigger>
+        <TabsTrigger value="laws">الجريدة الرسمية</TabsTrigger>
         <TabsTrigger value="supreme_court">المحكمة العليا</TabsTrigger>
         <TabsTrigger value="constitution">الدستور</TabsTrigger>
       </TabsList>
@@ -51,13 +52,15 @@ export function SearchTab({
       </TabsContent>
 
 
-      <TabsContent value="jarida_rassmia">
+      <TabsContent value="laws">
         <Card>
           <CardHeader>
             <CardTitle>الجريدة الرسمية</CardTitle>
             <CardDescription>الجريدة الرسمية</CardDescription>
           </CardHeader>
-
+          <CardContent>
+            <LawSearchForm query={query} />
+          </CardContent>
         </Card>
       </TabsContent>
 

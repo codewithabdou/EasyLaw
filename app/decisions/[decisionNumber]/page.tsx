@@ -13,6 +13,7 @@ const DecisionDetailsPage = async ({
 }) => {
   const decisionNumber = params.decisionNumber;
   const data = await getSupremeCourtSearchResults(
+    
     undefined,
     decisionNumber,
     {
