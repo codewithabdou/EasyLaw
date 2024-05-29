@@ -26,7 +26,7 @@ import UserPlansColumns from "./columns";
 import { Plan } from "@typings/Plan";
 import { Switch } from "@components/ui/switch";
 
-export default function UserPlansDataTable({ data, purchasedPlan,isActive }: { data: Plan[], purchasedPlan: number,isActive:boolean }) {
+export default function UserPlansDataTable({ data, purchasedPlan,isActive }: { data: Plan[], purchasedPlan: number | null,isActive:boolean|null }) {
   const [month, setMonth] = useState(true);
   let columns;
   if (month) {

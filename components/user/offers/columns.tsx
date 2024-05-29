@@ -5,7 +5,7 @@ import { Checkbox } from "@components/ui/checkbox";
 import checkout from "@actions/checkout";
 
 
-const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): ColumnDef<Plan>[] => {
+const UserPlansColumns = (type:string,purchasedPlan:number | null,isActive:boolean | null): ColumnDef<Plan>[] => {
   const calculateSavingsPercentage = (monthlyPrice:number, yearlyPrice:number) => {
     const totalMonthlyPrice = monthlyPrice * 12; 
     const savings = totalMonthlyPrice - yearlyPrice; 
@@ -27,10 +27,10 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
       cell: ({ row }) => {
         const plan = row.original;
         return (
-          <div className="bg-primary w-full text-white  h-24 rounded-l-[10px] flex flex-col justify-center items-center">
-            <p className="font-bold md:text-xl">{plan.name}</p>
-            <p className="font-bold md:text-xl"> {type==="month" ? plan.price_month :plan.price_year } دج </p>
-            <p className="font-bold md:text-xl"> {type==="year" ? "%"+ calculateSavingsPercentage(plan.price_month,plan.price_year)+"-" : null } </p>
+          <div className=" p-3 bg-primary w-full text-white  h-32 rounded-l-[10px] flex flex-col justify-center items-center">
+            <p className="font-bold md:text-lg">{plan.name}</p>
+            <p className="font-bold md:text-lg"> {type==="month" ? plan.price_month :plan.price_year } دج </p>
+            <p className="font-bold md:text-lg"> {type==="year" ? "%"+ calculateSavingsPercentage(plan.price_month,plan.price_year)+"-" : null } </p>
           </div>
         );
       },
@@ -122,7 +122,7 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
         }
         return (
           <Button className="w-full h-24 rounded-l-[10px] rounded-r-none"
-          disabled={plan.id===purchasedPlan && isActive}
+          disabled={purchasedPlan && isActive ? plan.id===purchasedPlan && isActive : false}
           onClick={async ()=>{
             
             const url=await checkout(planSub) as string;

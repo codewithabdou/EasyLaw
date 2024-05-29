@@ -66,10 +66,10 @@ async function page() {
         <h1 className='md:text-3xl text-xl font-bold'>عروضنا <span className='text-[#316E83]'>المتوفرة</span></h1>
 
       <div className='w-full flex flex-col justify-center items-center'>
-      <UserPlansDataTable data={activePlans} purchasedPlan={sub.plan.id} isActive={sub.active} />
+      <UserPlansDataTable data={activePlans} purchasedPlan={sub.plan  ? sub.plan.id : null} isActive={sub ? sub.active :null} />
       <div className='w-full flex flex-col gap-5 items-center justify-center'>
           <h1 className='md:text-3xl text-xl font-bold'><span className='text-[#316E83]'>إشتراكك</span> الحالي</h1>
-        {sub.plan.active ? <InvoiceAccordion 
+        {sub.plan ? sub.plan.active ? <InvoiceAccordion 
         planeName={sub.plan.name}
         date={formatDateString(sub.expiry_date,format)}
         purchaseDate={formatDateString(sub.start_date,format)}
@@ -85,7 +85,7 @@ async function page() {
         priceM={sub.plan.price_month}
         priceY={sub.plan.price_year}
 
-      /> :  <p>لا يوجد أي اشتراك في الوقت الحالي</p>}
+      /> :  <p>لا يوجد أي اشتراك في الوقت الحالي</p> : <p>لا يوجد أي اشتراك في الوقت الحالي</p>}
            </div>
         </div>
         
