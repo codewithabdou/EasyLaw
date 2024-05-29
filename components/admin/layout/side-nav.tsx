@@ -7,14 +7,11 @@ import { usePathname } from "next/navigation";
 import { logout } from "@services/authentication.service";
 
 import { ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { Button } from "@components/ui/button";
 import Image from "next/image";
 import IMAGES from "@config/images";
 
 const SideNav = ({ items }: { items: any[] }) => {
-  const router = useRouter();
-
   return (
     <div className="md:w-60 bg-white h-screen flex-1 fixed border-r border-zinc-200 hidden md:flex">
       <div className="flex flex-col justify-between space-y-6 w-full">
@@ -31,8 +28,8 @@ const SideNav = ({ items }: { items: any[] }) => {
         </div>
         <Link className="w-full" href="/">
           <Button
-            onClick={async () => {
-              await logout();
+            onClick={() => {
+              logout();
             }}
             className="rounded-none w-full"
             variant={"outline"}

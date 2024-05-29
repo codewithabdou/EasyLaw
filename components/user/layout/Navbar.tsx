@@ -46,7 +46,7 @@ const Navbar = ({
 
   const links = [
     { name: "الرئيسية", href: "/" },
-    { name: "عروض الإستعمال", href: "/" },
+    { name: "عروض الإستعمال", href: "/offers" },
     { name: "محرك البحث", href: "/search" },
     { name: "الإشعارات", href: "/" },
     { name: "مساعد جي بي تي", href: "/" },

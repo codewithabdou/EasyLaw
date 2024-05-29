@@ -14,11 +14,14 @@ import ConseilSearchForm from "./forms/ConseilSearchForm";
 
 import { useRouter } from "next/navigation";
 import LawSearchForm from "./forms/LawSearchForm";
+import NoService from "../shared/NoService";
 
 export function SearchTab({
   query,
+  canAccessSupremeCourt,
 }: {
   query: { search_type: string | undefined };
+  canAccessSupremeCourt?: boolean;
 }) {
   const router = useRouter();
   return (
@@ -38,7 +41,6 @@ export function SearchTab({
         <TabsTrigger value="constitution">الدستور</TabsTrigger>
       </TabsList>
 
-
       <TabsContent value="conseil">
         <Card>
           <CardHeader>
@@ -50,7 +52,6 @@ export function SearchTab({
           </CardContent>
         </Card>
       </TabsContent>
-
 
       <TabsContent value="laws">
         <Card>
@@ -64,7 +65,6 @@ export function SearchTab({
         </Card>
       </TabsContent>
 
-
       <TabsContent value="supreme_court">
         <Card className="bg-slate-100">
           <CardHeader>
@@ -72,7 +72,10 @@ export function SearchTab({
             <CardDescription>المحكمة العليا</CardDescription>
           </CardHeader>
           <CardContent>
-            <SupremeCourtSearchForm query={query} />
+            <SupremeCourtSearchForm
+              isBlured={!canAccessSupremeCourt}
+              query={query}
+            />
           </CardContent>
         </Card>
       </TabsContent>
@@ -84,12 +87,10 @@ export function SearchTab({
             <CardDescription>الدستور</CardDescription>
           </CardHeader>
           <CardContent>
-            <ConstitutionSearchForm query={query} /> 
+            <ConstitutionSearchForm query={query} />
           </CardContent>
         </Card>
       </TabsContent>
-
-
     </Tabs>
   );
 }

@@ -7,8 +7,13 @@ export default async function middleware(
 ): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
   const url = request.nextUrl.clone();
-
-  const userRole: string | undefined = cookies().get("role")?.value;
+  let userRole: string;
+  const user = cookies().get("user")?.value;
+  if (user === null || user === undefined || user.length === 0) {
+    userRole = "";
+  } else {
+    userRole = JSON.parse(user).role;
+  }
   const UserIsNotAuthenticated: boolean = !userRole || !userRole.length;
 
   if (authorization.isProtectedRoute(pathname)) {
@@ -34,6 +39,5 @@ function redirectToNotFound(url: URL): NextResponse {
 }
 
 export const config = {
-  // matcher: ["/search", "/auth/login", "/auth/register", "/admin"],
-  matcher: [],
+  matcher: ["/search", "/auth/login", "/auth/register", "/admin/dashboard"],
 };

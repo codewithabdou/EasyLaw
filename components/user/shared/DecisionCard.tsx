@@ -30,7 +30,9 @@ const DecisionCard = ({ decision }: { decision: SupremeCourtDecision }) => {
         </CardContent>
         <CardFooter>
           <Button variant={"outline"}>
-            <Link href={`/decisions/${decision.number}`}>اقرأ المزيد</Link>
+            <Link href={`/court-decisions/${decision.number}`}>
+              اقرأ المزيد
+            </Link>
           </Button>
         </CardFooter>
       </Card>

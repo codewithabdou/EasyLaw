@@ -2,7 +2,6 @@ import getSupremeCourtSearchResults from "@actions/getSupremeCourtSearchResults"
 import getConstitutionResults from "@actions/getConstitutionResults";
 import getConseilSearchResults from "@actions/getConseilSearchResults";
 
-import Navbar from "@components/user/layout/Navbar";
 import DecisionsList from "@components/user/search/DecisionsList";
 import DecisionListConstitution from "@components/user/search/DecisionListConstitution";
 import DecisionListConseil from "@components/user/search/DecisionListConseil";
@@ -13,12 +12,15 @@ import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
 import getLawSearchResults from "@actions/getLawSearchResults";
 import DecisionListLaw from "@components/user/search/DecisionListLaw";
 
+import { getUserDataFromCookies } from "@services/authentication.service";
+
+import NoService from "@components/user/shared/NoService";
 const SearchPage = async ({
   searchParams,
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  const search_type =
+  const search_type: string =
     typeof searchParams?.search_type === "string"
       ? searchParams.search_type
       : "supreme_court";
@@ -47,12 +49,6 @@ const SearchPage = async ({
       ? searchParams.search_field
       : undefined;
 
-
-  typeof searchParams?.search_type === "string"
-    ? searchParams.search_type
-    : "constitution";
-
-
   const section_number =
     typeof searchParams?.section_number === "string"
       ? searchParams.section_number
@@ -74,20 +70,13 @@ const SearchPage = async ({
       ? searchParams.article_number
       : undefined;
 
-
-  typeof searchParams?.search_type === "string"
-    ? searchParams.search_type
-    : "conseil";
   const number =
-    typeof searchParams?.number === "string"
-      ? searchParams.number
-      : undefined;
-  
+    typeof searchParams?.number === "string" ? searchParams.number : undefined;
+
   const chamber =
     typeof searchParams?.chamber === "string"
       ? searchParams.chamber
       : undefined;
-
 
   const section =
     typeof searchParams?.section === "string"
@@ -102,29 +91,22 @@ const SearchPage = async ({
       ? searchParams.subject
       : undefined;
 
+  const field =
+    typeof searchParams?.field === "string" ? searchParams.field : undefined;
 
-  typeof searchParams?.search_type === "string"
-    ? searchParams.search_type
-    : "laws";
-
-const field =
-  typeof searchParams?.field === "string"
-    ? searchParams.field
+  const ministry =
+    typeof searchParams?.ministry === "string"
+      ? searchParams.ministry
       : undefined;
 
-const ministry =
-  typeof searchParams?.ministry === "string"
-    ? searchParams.ministry
+  const text_number =
+    typeof searchParams?.text_number === "string"
+      ? searchParams.text_number
       : undefined;
 
-const text_number =
-  typeof searchParams?.text_number === "string"
-    ? searchParams.text_number
-      : undefined;
-
-const text_type =
-  typeof searchParams?.text_type === "string"
-    ? searchParams.text_type
+  const text_type =
+    typeof searchParams?.text_type === "string"
+      ? searchParams.text_type
       : undefined;
 
   const journal_start_date =
@@ -144,56 +126,66 @@ const text_type =
       ? searchParams.signature_end_date
       : undefined;
 
-
-
-
-
+  const userDataCookies = await getUserDataFromCookies();
+  const canAccess = userDataCookies?.canAccess;
+  const canAccessSupremeCourt = canAccess?.includes("search-supreme-court");
 
   if (search_type === "supreme_court") {
-    const data = await getSupremeCourtSearchResults(
-      search_query,
-      decision_number,
-      {
-        from: start_date,
-        to: end_date,
-      },
-      decision_subject,
-      search_field,
-      1
-    );
+    if (canAccessSupremeCourt) {
+      const data = await getSupremeCourtSearchResults(
+        search_query,
+        decision_number,
+        {
+          from: start_date,
+          to: end_date,
+        },
+        decision_subject,
+        search_field,
+        1
+      );
 
-    const decisions = data?.data;
-    return (
-      <>
-        <ServerSideNavbar />
-        <main className="pt-24 px-[5%]">
-          <FirstPage />
-          <SearchTab query={{ search_type }} />
-          <DecisionsList
-            query={{
-              search_query,
-              decision_number,
-              start_date,
-              end_date,
-              decision_subject,
-              search_field,
-            }}
-            initiaDecisions={decisions}
-          />
-        </main>
-        <Footer />
-      </>
-    );
-  }
-
-
-
-
-
-
- 
-
-  if (search_type === "constitution") {
+      const decisions = data?.data;
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab
+              canAccessSupremeCourt={canAccessSupremeCourt}
+              query={{ search_type }}
+            />
+            <DecisionsList
+              query={{
+                search_query,
+                decision_number,
+                start_date,
+                end_date,
+                decision_subject,
+                search_field,
+              }}
+              initiaDecisions={decisions}
+            />
+          </main>
+          <Footer />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab
+              canAccessSupremeCourt={canAccessSupremeCourt}
+              query={{ search_type }}
+            />
+            <NoService />
+          </main>
+          <Footer />
+        </>
+      );
+    }
+  } else if (search_type === "constitution") {
     const data = await getConstitutionResults(
       search_query,
       section_number,
@@ -205,9 +197,6 @@ const text_type =
     );
 
     const decisions = data?.data;
-
-
-
 
     return (
       <>
@@ -232,18 +221,6 @@ const text_type =
     );
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
   if (search_type === "conseil") {
     const data = await getConseilSearchResults(
       search_query,
@@ -261,9 +238,6 @@ const text_type =
 
     const decisions = data?.data;
 
-
-
-
     return (
       <>
         <ServerSideNavbar />
@@ -279,7 +253,7 @@ const text_type =
               chamber,
               section,
               procedure,
-              subject
+              subject,
             }}
             initiaDecisions={decisions}
           />
@@ -288,11 +262,6 @@ const text_type =
       </>
     );
   }
-
-
-
- 
-
 
   if (search_type === "laws") {
     const data = await getLawSearchResults(
@@ -314,9 +283,6 @@ const text_type =
 
     const decisions = data?.data;
 
-
-
-
     return (
       <>
         <ServerSideNavbar />
@@ -333,50 +299,10 @@ const text_type =
               journal_start_date,
               journal_end_date,
               signature_start_date,
-              signature_end_date
+              signature_end_date,
             }}
             initiaDecisions={decisions}
           />
-        </main>
-        <Footer />
-      </>
-    );
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  else {
-    return (
-      <>
-        <ServerSideNavbar />
-        <main className="pt-24 px-[5%]">
-          <FirstPage />
-          <SearchTab query={{ search_type }} />
         </main>
         <Footer />
       </>

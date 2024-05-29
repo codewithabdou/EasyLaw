@@ -1,7 +1,8 @@
 "use server";
 import { cookies } from "next/headers";
 import API_INFO from "@config/apiRoutes";
-import { UserDataCookies } from "@typings/User";
+import { User, UserDataCookies } from "@typings/User";
+import getSubs from "@actions/getSubscriptions";
 
 async function login(formData: any) {
   try {
@@ -20,16 +21,44 @@ async function login(formData: any) {
       };
     }
     const data = await response.json();
-    cookies().set("userToken", data.token);
-    cookies().set("userId", data.userId);
-    const user = await getLoggedInUserInfo();
-    cookies().set("role", user.role);
-    if (user.active) {
-      return {
-        status: "success",
-        message: user.role,
-      };
+    cookies().set("token", data.token);
+    cookies().set("id", data.userId);
+    const user: User | null = await getLoggedInUserInfo();
+    if (user) {
+      cookies().set("user", JSON.stringify(user));
+      if (user.active) {
+        if (user.role === "user") {
+          const subscription = await getSubs();
+          let canAccess = [];
+          if (subscription) {
+            if (subscription.plan.has_gpt_access) {
+              canAccess.push("chat-bot");
+            }
+            if (subscription.plan.has_notifications_access) {
+              canAccess.push("notifications");
+            }
+            if (subscription.plan.has_search_conseil) {
+              canAccess.push("search-conseil");
+            }
+            if (subscription.plan.has_search_constitution) {
+              canAccess.push("search-constitution");
+            }
+            if (subscription.plan.has_search_laws) {
+              canAccess.push("search-laws");
+            }
+            if (subscription.plan.has_search_supreme_court) {
+              canAccess.push("search-supreme-court");
+            }
+          }
+          cookies().set("subscription", JSON.stringify(canAccess));
+        }
+        return {
+          status: "success",
+          message: user.role,
+        };
+      }
     } else {
+      await logout();
       return {
         status: "error",
         message: "حسابك غير مفعل. يرجى التواصل مع الإدارة",
@@ -44,9 +73,44 @@ async function login(formData: any) {
 }
 
 async function logout() {
-  cookies().set("role", "");
-  cookies().set("userToken", "");
-  cookies().set("userId", "");
+  cookies().delete("user");
+  cookies().delete("token");
+  cookies().delete("id");
+  cookies().delete("subscription");
+}
+
+async function refreshDataCookies() {
+  const user = await getLoggedInUserInfo();
+  const subscription = await getSubs();
+  if (user) {
+    cookies().set("user", JSON.stringify(user));
+    if (user.active) {
+      if (user.role === "user") {
+        let canAccess = [];
+        if (subscription) {
+          if (subscription.plan.has_gpt_access) {
+            canAccess.push("chat-bot");
+          }
+          if (subscription.plan.has_notifications_access) {
+            canAccess.push("notifications");
+          }
+          if (subscription.plan.has_search_conseil) {
+            canAccess.push("search-conseil");
+          }
+          if (subscription.plan.has_search_constitution) {
+            canAccess.push("search-constitution");
+          }
+          if (subscription.plan.has_search_laws) {
+            canAccess.push("search-laws");
+          }
+          if (subscription.plan.has_search_supreme_court) {
+            canAccess.push("search-supreme-court");
+          }
+        }
+        cookies().set("subscription", JSON.stringify(canAccess));
+      }
+    }
+  }
 }
 
 async function register(formData: any) {
@@ -82,42 +146,42 @@ async function register(formData: any) {
 }
 
 async function getUserDataFromCookies(): Promise<UserDataCookies | null> {
-  const userId = cookies().get("userId")?.value;
-  const role = cookies().get("role")?.value;
-  const userToken = cookies().get("userToken")?.value;
+  const user = cookies().get("user")?.value;
+  const userToken = cookies().get("token")?.value;
+  const subscription = cookies().get("subscription")?.value;
   if (
-    userId === undefined ||
-    userId === null ||
-    userId.length === 0 ||
-    role === undefined ||
-    role === null ||
-    role.length === 0 ||
+    user === undefined ||
+    user === null ||
+    user.length === 0 ||
     userToken === undefined ||
     userToken === null ||
-    userToken.length === 0
+    userToken.length === 0 ||
+    subscription === undefined ||
+    subscription === null
   ) {
     return null;
   }
+  const userObj: User = JSON.parse(user);
   return {
-    userId,
-    role,
+    user: userObj,
     token: userToken,
+    canAccess: JSON.parse(subscription),
   };
 }
 
-async function getLoggedInUserInfo() {
-  const userId = cookies().get("userId")?.value;
-  if (!userId || userId.length === 0 || userId === undefined) {
+async function getLoggedInUserInfo(): Promise<User | null> {
+  const userId = cookies().get("id")?.value;
+  if (userId === undefined || userId === null || userId.length === 0) {
     return null;
   }
   try {
     const response = await fetch(
-      `${API_INFO.BASE_URL}${API_INFO.USERS.GET_USER_BY_ID(userId)}`,
+      `${API_INFO.BASE_URL}${API_INFO.USERS.GET_USER_BY_ID(userId as string)}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${cookies().get("userToken")?.value}`,
+          Authorization: `Bearer ${cookies().get("token")?.value}`,
         },
       }
     );
@@ -131,4 +195,11 @@ async function getLoggedInUserInfo() {
   }
 }
 
-export { login, logout, register, getUserDataFromCookies, getLoggedInUserInfo };
+export {
+  login,
+  logout,
+  register,
+  getUserDataFromCookies,
+  getLoggedInUserInfo,
+  refreshDataCookies,
+};

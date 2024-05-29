@@ -54,8 +54,10 @@ const FormSchema = z.object({
 
 export function SupremeCourtSearchForm({
   query,
+  isBlured,
 }: {
   query: { search_type: string | undefined };
+  isBlured?: boolean;
 }) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: undefined,
@@ -104,7 +106,12 @@ export function SupremeCourtSearchForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={`w-full ${
+          isBlured ? "blur-sm pointer-events-none" : ""
+        }  space-y-6`}
+      >
         <div className="flex w-full md:items-center gap-6 items-start  flex-col md:flex-row">
           <FormField
             control={form.control}
