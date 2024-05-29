@@ -18,6 +18,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { GiCancel } from "react-icons/gi";
+import IMAGES from "@config/images";
 const formSchema = loginFormSchema;
 
 export default function LoginForm() {
@@ -66,11 +67,20 @@ export default function LoginForm() {
 
   return (
     <div className="grid grid-cols-1 w-full lg:grid-cols-2">
-      <div className="bg-red-500"></div>
-      <Form {...form}>
+      {/* <div className=""> */}
+
+        <img src={IMAGES.LOG_IN} className="w-4/5" alt="login"  />
+
+
+
+      {/* </div> */}
+      <Form {...form} >
+
+<div className="max-h-fit my-auto">
+      <p className="font-bold mb-4">يرجى تسجيل الدخول للوصول إلى حسابك</p>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 bg-slate-100 px-8 py-12 rounded-lg shadow-md w-full"
+          className="space-y-4 bg-slate-100 px-8 py-12 rounded-lg shadow-md w-full max-h-fit my-auto"
         >
           <FormField
             control={form.control}
@@ -105,6 +115,7 @@ export default function LoginForm() {
             </Button>
           </div>
         </form>
+        </div>
       </Form>
     </div>
   );

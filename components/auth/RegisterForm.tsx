@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import IMAGES from "@config/images";
 
 const formSchema = registerFormSchema;
 
@@ -85,8 +86,17 @@ export default function RegisterForm() {
 
   return (
     <div className="grid grid-cols-1 w-full lg:grid-cols-2">
-      <div className="bg-red-500"></div>
+      <div className="w-4/5">
+      <img src={IMAGES.SIGN_UP} alt="login"  />
+
+      </div>
       <Form {...form}>
+
+
+      <div className="max-h-fit my-auto">
+      <p className="font-bold mb-4">  مرحباً! يرجى ملء النموذج أدناه لإنشاء حساب جديد والانضمام إلينا</p>
+
+
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4 bg-slate-100 px-8 py-12 rounded-lg shadow-md w-full"
@@ -163,6 +173,7 @@ export default function RegisterForm() {
             </Button>
           </div>
         </form>
+        </div>
       </Form>
     </div>
   );
