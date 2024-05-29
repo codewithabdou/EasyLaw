@@ -81,11 +81,11 @@ async function logout() {
 
 async function refreshDataCookies() {
   const user = await getLoggedInUserInfo();
-  const subscription = await getSubs();
   if (user) {
     cookies().set("user", JSON.stringify(user));
     if (user.active) {
       if (user.role === "user") {
+        const subscription = await getSubs();
         let canAccess = [];
         if (subscription) {
           if (subscription.plan.has_gpt_access) {

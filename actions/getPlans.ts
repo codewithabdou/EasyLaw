@@ -5,7 +5,6 @@ import { Plan } from "@typings/Plan";
 import { cookies } from "next/headers";
 
 async function getPlans(): Promise<Plan[] | null> {
-
   const userToken = cookies().get("token")?.value;
 
   try {
@@ -19,6 +18,7 @@ async function getPlans(): Promise<Plan[] | null> {
         tags: ["getPlans"],
       },
     });
+
     const data = await response.json();
     return data;
   } catch (error) {

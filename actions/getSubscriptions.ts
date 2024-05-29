@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 
 async function getSubs(): Promise<Subscription | null> {
   const userToken = cookies().get("token")?.value;
-
   try {
     const response = await fetch(`${API_INFO.BASE_URL}/subscriptions`, {
       method: "GET",
@@ -15,10 +14,12 @@ async function getSubs(): Promise<Subscription | null> {
         Authorization: `Bearer ${userToken}`,
       },
     });
-    const data = await response.json();
     if (response.status !== 200) {
       return null;
     }
+
+    const data: Subscription = await response.json();
+
     return data;
   } catch (error) {
     console.error(error);

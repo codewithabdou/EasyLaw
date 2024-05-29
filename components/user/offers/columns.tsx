@@ -4,33 +4,49 @@ import { Plan } from "@typings/Plan";
 import { Checkbox } from "@components/ui/checkbox";
 import checkout from "@actions/checkout";
 
+const UserPlansColumns = (
+  type: string,
+  purchasedPlan: number,
+  isActive: boolean
+): ColumnDef<Plan>[] => {
+  const calculateSavingsPercentage = (
+    monthlyPrice: number,
+    yearlyPrice: number
+  ) => {
+    const totalMonthlyPrice = monthlyPrice * 12;
+    const savings = totalMonthlyPrice - yearlyPrice;
 
-const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): ColumnDef<Plan>[] => {
-  const calculateSavingsPercentage = (monthlyPrice:number, yearlyPrice:number) => {
-    const totalMonthlyPrice = monthlyPrice * 12; 
-    const savings = totalMonthlyPrice - yearlyPrice; 
-  
     if (savings <= 0) {
-      
       return 0;
     }
-  
-    const savingsPercentage = (savings / totalMonthlyPrice) * 100; 
-    return savingsPercentage.toFixed(2); 
+
+    const savingsPercentage = (savings / totalMonthlyPrice) * 100;
+    return savingsPercentage.toFixed(2);
   };
   const columns: ColumnDef<Plan>[] = [
-   
-   
     {
       accessorKey: " العرض",
       header: " العرض",
       cell: ({ row }) => {
         const plan = row.original;
         return (
-          <div className="bg-primary w-full text-white  h-24 rounded-l-[10px] flex flex-col justify-center items-center">
-            <p className="font-bold md:text-xl">{plan.name}</p>
-            <p className="font-bold md:text-xl"> {type==="month" ? plan.price_month :plan.price_year } دج </p>
-            <p className="font-bold md:text-xl"> {type==="year" ? "%"+ calculateSavingsPercentage(plan.price_month,plan.price_year)+"-" : null } </p>
+          <div className="bg-primary text-lg w-full text-white p-4  h-24  rounded-r-[10px] flex flex-col justify-center items-center">
+            <p className="font-bold">{plan.name}</p>
+            <p className="font-bold">
+              {" "}
+              {type === "month" ? plan.price_month : plan.price_year} دج{" "}
+            </p>
+            <p className="font-bold">
+              {" "}
+              {type === "year"
+                ? "%" +
+                  calculateSavingsPercentage(
+                    plan.price_month,
+                    plan.price_year
+                  ) +
+                  "-"
+                : null}{" "}
+            </p>
           </div>
         );
       },
@@ -40,11 +56,7 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
       header: "البحث في المحكمة العليا",
       cell: ({ row }) => {
         const plan = row.original;
-        return (
-          <Checkbox 
-            checked={plan.has_search_supreme_court}
-          />
-        );
+        return <Checkbox checked={plan.has_search_supreme_court} />;
       },
     },
     {
@@ -52,11 +64,7 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
       header: "البحث في القوانين",
       cell: ({ row }) => {
         const plan = row.original;
-        return (
-          <Checkbox 
-          checked={plan.has_search_laws}
-        />
-        );
+        return <Checkbox checked={plan.has_search_laws} />;
       },
     },
     {
@@ -64,11 +72,7 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
       header: "البحث في الدستور",
       cell: ({ row }) => {
         const plan = row.original;
-        return (
-          <Checkbox 
-          checked={plan.has_search_constitution}
-        />
-        );
+        return <Checkbox checked={plan.has_search_constitution} />;
       },
     },
     {
@@ -76,11 +80,7 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
       header: "البحث في المجلس القضائي",
       cell: ({ row }) => {
         const plan = row.original;
-        return (
-          <Checkbox 
-          checked={plan.has_search_conseil}
-        />
-        );
+        return <Checkbox checked={plan.has_search_conseil} />;
       },
     },
     {
@@ -88,11 +88,7 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
       header: "الإشعارات",
       cell: ({ row }) => {
         const plan = row.original;
-        return (
-          <Checkbox 
-            checked={plan.has_notifications_access}
-          />
-        );
+        return <Checkbox checked={plan.has_notifications_access} />;
       },
     },
     {
@@ -100,12 +96,7 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
       header: "مساعد جي بي تي",
       cell: ({ row }) => {
         const plan = row.original;
-        return (
-          <Checkbox 
-          checked={plan.has_gpt_access}
-          
-        />
-        );
+        return <Checkbox checked={plan.has_gpt_access} />;
       },
     },
     {
@@ -113,22 +104,23 @@ const UserPlansColumns = (type:string,purchasedPlan:number,isActive:boolean): Co
       header: "   شراء",
       cell: ({ row }) => {
         const plan = row.original;
-        const duration=type==="month" ? "monthly" :"yearly";
-        const planSub={
-          plan_id:plan.id,
-          plan_duration:duration,
-          success_url:"http://localhost:3000/offers",
-          failure_url: "http://localhost:3000/offers"
-        }
+        const duration = type === "month" ? "monthly" : "yearly";
+        const planSub = {
+          plan_id: plan.id,
+          plan_duration: duration,
+          success_url: "http://localhost:3000/offers",
+          failure_url: "http://localhost:3000/offers",
+        };
         return (
-          <Button className="w-full h-24 rounded-l-[10px] rounded-r-none"
-          disabled={plan.id===purchasedPlan && isActive}
-          onClick={async ()=>{
-            
-            const url=await checkout(planSub) as string;
-            window.open(url)
-          }}>
-           شراء
+          <Button
+            className="w-full h-24 rounded-l-[10px] rounded-r-none"
+            disabled={plan.id === purchasedPlan && isActive}
+            onClick={async () => {
+              const url = (await checkout(planSub)) as string;
+              window.open(url);
+            }}
+          >
+            شراء
           </Button>
         );
       },

@@ -12,8 +12,16 @@ import InvoiceAccordion from "@components/admin/Tarification management/subscrip
 import { Subscription } from "@typings/subs";
 import { cookies } from "next/headers";
 import { formatDateString } from "@helpers/dateFormatter";
+import DataCookiesRefresher from "@components/user/shared/DataCookiesRefresher";
 
-async function page() {
+async function page({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const isRedirectedFromChargily =
+    typeof searchParams?.checkout_id === "string" ? true : false;
+
   const sub = (await getSubs()) as Subscription;
 
   const plans = await getPlans();
@@ -36,6 +44,7 @@ async function page() {
       </div>
     );
   }
+
   const activePlans = plans.filter((plan) => plan.active);
   const stringUser = cookies().get("user")?.value as string;
   const user = JSON.parse(stringUser);
@@ -64,6 +73,7 @@ async function page() {
         </div>
 
         <div className="bg-primary w-[80%] h-7 rounded-t-[20px]"></div>
+        {isRedirectedFromChargily && <DataCookiesRefresher />}
         <h1 className="md:text-3xl text-xl font-bold">
           عروضنا <span className="text-[#316E83]">المتوفرة</span>
         </h1>

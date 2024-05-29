@@ -1,20 +1,18 @@
-import getSupremeCourtSearchResults from "@actions/getSupremeCourtSearchResults";
-import getConstitutionResults from "@actions/getConstitutionResults";
-import getConseilSearchResults from "@actions/getConseilSearchResults";
-
-import DecisionsList from "@components/user/search/DecisionsList";
-import DecisionListConstitution from "@components/user/search/DecisionListConstitution";
-import DecisionListConseil from "@components/user/search/DecisionListConseil";
+import { getUserDataFromCookies } from "@services/authentication.service";
 import { SearchTab } from "@components/user/search/SearchTab";
 import FirstPage from "@components/user/shared/FirstPage";
 import Footer from "@components/user/layout/Footer";
 import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
+import NoService from "@components/user/shared/NoService";
 import getLawSearchResults from "@actions/getLawSearchResults";
 import DecisionListLaw from "@components/user/search/DecisionListLaw";
+import DecisionListConseil from "@components/user/search/DecisionListConseil";
+import getConseilSearchResults from "@actions/getConseilSearchResults";
+import DecisionListConstitution from "@components/user/search/DecisionListConstitution";
+import getConstitutionResults from "@actions/getConstitutionResults";
+import DecisionsList from "@components/user/search/DecisionsList";
+import getSupremeCourtSearchResults from "@actions/getSupremeCourtSearchResults";
 
-import { getUserDataFromCookies } from "@services/authentication.service";
-
-import NoService from "@components/user/shared/NoService";
 const SearchPage = async ({
   searchParams,
 }: {
@@ -129,6 +127,9 @@ const SearchPage = async ({
   const userDataCookies = await getUserDataFromCookies();
   const canAccess = userDataCookies?.canAccess;
   const canAccessSupremeCourt = canAccess?.includes("search-supreme-court");
+  const canAccessConstitution = canAccess?.includes("search-constitution");
+  const canAccessConseil = canAccess?.includes("search-conseil");
+  const canAccessLaws = canAccess?.includes("search-laws");
 
   if (search_type === "supreme_court") {
     if (canAccessSupremeCourt) {
@@ -186,127 +187,177 @@ const SearchPage = async ({
       );
     }
   } else if (search_type === "constitution") {
-    const data = await getConstitutionResults(
-      search_query,
-      section_number,
-      section_name,
-      chapter_number,
-      chapter_name,
-      article_number,
-      1
-    );
+    if (canAccessConstitution) {
+      const data = await getConstitutionResults(
+        search_query,
+        section_number,
+        section_name,
+        chapter_number,
+        chapter_name,
+        article_number,
+        1
+      );
 
-    const decisions = data?.data;
+      const decisions = data?.data;
 
-    return (
-      <>
-        <ServerSideNavbar />
-        <main className="pt-24 px-[5%]">
-          <FirstPage />
-          <SearchTab query={{ search_type }} />
-          <DecisionListConstitution
-            query={{
-              search_query,
-              section_number,
-              section_name,
-              chapter_number,
-              chapter_name,
-              article_number,
-            }}
-            initiaDecisions={decisions}
-          />
-        </main>
-        <Footer />
-      </>
-    );
-  }
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab
+              query={{ search_type }}
+              canAccessConstitution={canAccessConstitution}
+            />
+            <DecisionListConstitution
+              query={{
+                search_query,
+                section_number,
+                section_name,
+                chapter_number,
+                chapter_name,
+                article_number,
+              }}
+              initiaDecisions={decisions}
+            />
+          </main>
+          <Footer />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab
+              canAccessConstitution={canAccessConstitution}
+              query={{ search_type }}
+            />
+            <NoService />
+          </main>
+          <Footer />
+        </>
+      );
+    }
+  } else if (search_type === "conseil") {
+    if (canAccessConseil) {
+      const data = await getConseilSearchResults(
+        search_query,
+        number,
+        {
+          from: start_date,
+          to: end_date,
+        },
+        chamber,
+        section,
+        procedure,
+        subject,
+        1
+      );
 
-  if (search_type === "conseil") {
-    const data = await getConseilSearchResults(
-      search_query,
-      number,
-      {
-        from: start_date,
-        to: end_date,
-      },
-      chamber,
-      section,
-      procedure,
-      subject,
-      1
-    );
+      const decisions = data?.data;
 
-    const decisions = data?.data;
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab
+              canAccessConseil={canAccessConseil}
+              query={{ search_type }}
+            />
+            <DecisionListConseil
+              query={{
+                search_query,
+                number,
+                start_date,
+                end_date,
+                chamber,
+                section,
+                procedure,
+                subject,
+              }}
+              initiaDecisions={decisions}
+            />
+          </main>
+          <Footer />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab
+              canAccessConseil={canAccessConseil}
+              query={{ search_type }}
+            />
+            <NoService />
+          </main>
+          <Footer />
+        </>
+      );
+    }
+  } else if (search_type === "laws") {
+    if (canAccessLaws) {
+      const data = await getLawSearchResults(
+        search_query,
+        field,
+        ministry,
+        text_number,
+        text_type,
+        {
+          from: journal_start_date,
+          to: journal_end_date,
+        },
+        {
+          from: signature_start_date,
+          to: signature_end_date,
+        },
+        1
+      );
 
-    return (
-      <>
-        <ServerSideNavbar />
-        <main className="pt-24 px-[5%]">
-          <FirstPage />
-          <SearchTab query={{ search_type }} />
-          <DecisionListConseil
-            query={{
-              search_query,
-              number,
-              start_date,
-              end_date,
-              chamber,
-              section,
-              procedure,
-              subject,
-            }}
-            initiaDecisions={decisions}
-          />
-        </main>
-        <Footer />
-      </>
-    );
-  }
+      const decisions = data?.data;
 
-  if (search_type === "laws") {
-    const data = await getLawSearchResults(
-      search_query,
-      field,
-      ministry,
-      text_number,
-      text_type,
-      {
-        from: journal_start_date,
-        to: journal_end_date,
-      },
-      {
-        from: signature_start_date,
-        to: signature_end_date,
-      },
-      1
-    );
-
-    const decisions = data?.data;
-
-    return (
-      <>
-        <ServerSideNavbar />
-        <main className="pt-24 px-[5%]">
-          <FirstPage />
-          <SearchTab query={{ search_type }} />
-          <DecisionListLaw
-            query={{
-              search_query,
-              field,
-              ministry,
-              text_number,
-              text_type,
-              journal_start_date,
-              journal_end_date,
-              signature_start_date,
-              signature_end_date,
-            }}
-            initiaDecisions={decisions}
-          />
-        </main>
-        <Footer />
-      </>
-    );
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab canAccessLaws={canAccessLaws} query={{ search_type }} />
+            <DecisionListLaw
+              query={{
+                search_query,
+                field,
+                ministry,
+                text_number,
+                text_type,
+                journal_start_date,
+                journal_end_date,
+                signature_start_date,
+                signature_end_date,
+              }}
+              initiaDecisions={decisions}
+            />
+          </main>
+          <Footer />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab canAccessLaws={canAccessLaws} query={{ search_type }} />
+            <NoService />
+          </main>
+          <Footer />
+        </>
+      );
+    }
   }
 };
 

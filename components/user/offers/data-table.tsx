@@ -35,15 +35,6 @@ export default function UserPlansDataTable({
   purchasedPlan: number;
   isActive: boolean;
 }) {
-  //TODO , TO BE modified later
-  if (!data || !data.length || !purchasedPlan || !isActive) {
-    return (
-      <div>
-        yanis mbe3d modifier hna tji handle when mknch plans wla mknch subs
-      </div>
-    );
-  }
-
   const [month, setMonth] = useState(true);
   let columns;
   if (month) {

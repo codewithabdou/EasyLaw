@@ -56,7 +56,7 @@ const DecisionsList = ({
     }
   }, [inView]);
 
-  if (!decisions.length)
+  if (!decisions?.length)
     return (
       <div className="flex justify-center items-center h-96">
         <h1 className="text-3xl text-gray-500 dark:text-gray-400">
