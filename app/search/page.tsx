@@ -5,6 +5,12 @@ import { SearchTab } from "@components/user/search/SearchTab";
 import FirstPage from "@components/user/shared/FirstPage";
 import Footer from "@components/user/layout/Footer";
 import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
+import { getUserDataFromCookies } from "@services/authentication.service";
+import Image from "next/image";
+import IMAGES from "@config/images";
+import Link from "next/link";
+import { Button } from "@components/ui/button";
+import NoService from "@components/user/shared/NoService";
 const SearchPage = async ({
   searchParams,
 }: {
@@ -39,42 +45,66 @@ const SearchPage = async ({
       ? searchParams.search_field
       : undefined;
 
+  const userDataCookies = await getUserDataFromCookies();
+  const canAccess = userDataCookies?.canAccess;
+  const canAccessSupremeCourt = canAccess?.includes("search-supreme-court");
+
   if (search_type === "supreme_court") {
-    const data = await getSupremeCourtSearchResults(
-      search_query,
-      decision_number,
-      {
-        from: start_date,
-        to: end_date,
-      },
-      decision_subject,
-      search_field,
-      1
-    );
+    if (canAccessSupremeCourt) {
+      const data = await getSupremeCourtSearchResults(
+        search_query,
+        decision_number,
+        {
+          from: start_date,
+          to: end_date,
+        },
+        decision_subject,
+        search_field,
+        1
+      );
 
-    const decisions = data?.data;
+      const decisions = data?.data;
 
-    return (
-      <>
-        <ServerSideNavbar />
-        <main className="pt-24 px-[5%]">
-          <FirstPage />
-          <SearchTab query={{ search_type }} />
-          <DecisionsList
-            query={{
-              search_query,
-              decision_number,
-              start_date,
-              end_date,
-              decision_subject,
-              search_field,
-            }}
-            initiaDecisions={decisions}
-          />
-        </main>
-        <Footer />
-      </>
-    );
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab
+              canAccessSupremeCourt={canAccessSupremeCourt}
+              query={{ search_type }}
+            />
+            <DecisionsList
+              query={{
+                search_query,
+                decision_number,
+                start_date,
+                end_date,
+                decision_subject,
+                search_field,
+              }}
+              initiaDecisions={decisions}
+            />
+          </main>
+          <Footer />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <ServerSideNavbar />
+          <main className="pt-24 px-[5%]">
+            <FirstPage />
+            <SearchTab
+              canAccessSupremeCourt={canAccessSupremeCourt}
+              query={{ search_type }}
+            />
+            <NoService />
+          </main>
+          <Footer />
+        </>
+      );
+    }
   } else {
     return (
       <>

@@ -1,17 +1,15 @@
-import ServerSideNavbar from '@components/user/layout/ServerSideNavbar'
+import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
 import React from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@components/ui/button";
 import getPlans from "@actions/getPlans";
-import IMAGES from '@config/images';
-import InvoiceAccordion from '@components/admin/Tarification management/subscription';
-import getSubs from '@actions/getSubscriptions';
+import IMAGES from "@config/images";
+import InvoiceAccordion from "@components/admin/Tarification management/subscription";
+import getSubs from "@actions/getSubscriptions";
 async function page() {
-  
-        
-        const sub = await getSubs();
+  const sub = await getSubs();
 
   if (!sub) {
     return (
@@ -25,7 +23,7 @@ async function page() {
         <p className="text-center text-sm bg-red-200 rounded-md max-w-[40ch] text-red-600 p-2">
           يرجى التحقق من البيانات المدخلة
         </p>
-        <Link href={`/admin/users`}>
+        <Link href={`/`}>
           <Button>الذهاب إلى الصفحة الرئيسية</Button>
         </Link>
       </div>
@@ -33,24 +31,24 @@ async function page() {
   }
   return (
     <div className="w-full text-primary flex gap-5 flex-col p-5">
-        <ServerSideNavbar />
-        <div className='w-full  p-5 flex justify-center  items-center'>
-           <div className='w-1/3 flex flex-col gap-y-16'>
-              <h1 className='text-7xl text-primary font-bold'>فواتيري</h1>
-              <p className='text-sm text-[#316E83]'>اطلع على جميع فواتير إشتراكاتك في خدمات  EasyLaw</p>
-           </div>
-           <Image src={IMAGES.BILLING_ILLUSTRATION}
-         width={400}
-         height={400}
-         alt='bills'>
-
-         </Image>
+      <ServerSideNavbar />
+      <div className="w-full  p-5 flex justify-center  items-center">
+        <div className="w-1/3 flex flex-col gap-y-16">
+          <h1 className="text-7xl text-primary font-bold">فواتيري</h1>
+          <p className="text-sm text-[#316E83]">
+            اطلع على جميع فواتير إشتراكاتك في خدمات EasyLaw
+          </p>
         </div>
-        <div className='w-full h-[2px] bg-primary'></div>
-       
-         
+        <Image
+          src={IMAGES.BILLING_ILLUSTRATION}
+          width={400}
+          height={400}
+          alt="bills"
+        ></Image>
+      </div>
+      <div className="w-full h-[2px] bg-primary"></div>
     </div>
   );
 }
 
-export default page
+export default page;

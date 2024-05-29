@@ -26,13 +26,30 @@ import UserPlansColumns from "./columns";
 import { Plan } from "@typings/Plan";
 import { Switch } from "@components/ui/switch";
 
-export default function UserPlansDataTable({ data, purchasedPlan,isActive }: { data: Plan[], purchasedPlan: number,isActive:boolean }) {
+export default function UserPlansDataTable({
+  data,
+  purchasedPlan,
+  isActive,
+}: {
+  data: Plan[];
+  purchasedPlan: number;
+  isActive: boolean;
+}) {
+  //TODO , TO BE modified later
+  if (!data || !data.length || !purchasedPlan || !isActive) {
+    return (
+      <div>
+        yanis mbe3d modifier hna tji handle when mknch plans wla mknch subs
+      </div>
+    );
+  }
+
   const [month, setMonth] = useState(true);
   let columns;
   if (month) {
-    columns = UserPlansColumns("month",purchasedPlan,isActive);
+    columns = UserPlansColumns("month", purchasedPlan, isActive);
   } else {
-    columns = UserPlansColumns("year",purchasedPlan,isActive);
+    columns = UserPlansColumns("year", purchasedPlan, isActive);
   }
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -119,4 +136,3 @@ export default function UserPlansDataTable({ data, purchasedPlan,isActive }: { d
     </div>
   );
 }
-

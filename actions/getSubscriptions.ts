@@ -5,7 +5,6 @@ import { Subscription } from "@typings/subs";
 import { cookies } from "next/headers";
 
 async function getSubs(): Promise<Subscription | null> {
-
   const userToken = cookies().get("token")?.value;
 
   try {
@@ -15,9 +14,11 @@ async function getSubs(): Promise<Subscription | null> {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userToken}`,
       },
-      
     });
     const data = await response.json();
+    if (response.status !== 200) {
+      return null;
+    }
     return data;
   } catch (error) {
     console.error(error);

@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import API_INFO from "@config/apiRoutes";
 import { User, UserDataCookies } from "@typings/User";
+import getSubs from "@actions/getSubscriptions";
 
 async function login(formData: any) {
   try {
@@ -26,6 +27,31 @@ async function login(formData: any) {
     if (user) {
       cookies().set("user", JSON.stringify(user));
       if (user.active) {
+        if (user.role === "user") {
+          const subscription = await getSubs();
+          let canAccess = [];
+          if (subscription) {
+            if (subscription.plan.has_gpt_access) {
+              canAccess.push("chat-bot");
+            }
+            if (subscription.plan.has_notifications_access) {
+              canAccess.push("notifications");
+            }
+            if (subscription.plan.has_search_conseil) {
+              canAccess.push("search-conseil");
+            }
+            if (subscription.plan.has_search_constitution) {
+              canAccess.push("search-constitution");
+            }
+            if (subscription.plan.has_search_laws) {
+              canAccess.push("search-laws");
+            }
+            if (subscription.plan.has_search_supreme_court) {
+              canAccess.push("search-supreme-court");
+            }
+          }
+          cookies().set("subscription", JSON.stringify(canAccess));
+        }
         return {
           status: "success",
           message: user.role,
@@ -50,12 +76,40 @@ async function logout() {
   cookies().delete("user");
   cookies().delete("token");
   cookies().delete("id");
+  cookies().delete("subscription");
 }
 
 async function refreshDataCookies() {
   const user = await getLoggedInUserInfo();
+  const subscription = await getSubs();
   if (user) {
     cookies().set("user", JSON.stringify(user));
+    if (user.active) {
+      if (user.role === "user") {
+        let canAccess = [];
+        if (subscription) {
+          if (subscription.plan.has_gpt_access) {
+            canAccess.push("chat-bot");
+          }
+          if (subscription.plan.has_notifications_access) {
+            canAccess.push("notifications");
+          }
+          if (subscription.plan.has_search_conseil) {
+            canAccess.push("search-conseil");
+          }
+          if (subscription.plan.has_search_constitution) {
+            canAccess.push("search-constitution");
+          }
+          if (subscription.plan.has_search_laws) {
+            canAccess.push("search-laws");
+          }
+          if (subscription.plan.has_search_supreme_court) {
+            canAccess.push("search-supreme-court");
+          }
+        }
+        cookies().set("subscription", JSON.stringify(canAccess));
+      }
+    }
   }
 }
 
@@ -94,13 +148,16 @@ async function register(formData: any) {
 async function getUserDataFromCookies(): Promise<UserDataCookies | null> {
   const user = cookies().get("user")?.value;
   const userToken = cookies().get("token")?.value;
+  const subscription = cookies().get("subscription")?.value;
   if (
     user === undefined ||
     user === null ||
     user.length === 0 ||
     userToken === undefined ||
     userToken === null ||
-    userToken.length === 0
+    userToken.length === 0 ||
+    subscription === undefined ||
+    subscription === null
   ) {
     return null;
   }
@@ -108,6 +165,7 @@ async function getUserDataFromCookies(): Promise<UserDataCookies | null> {
   return {
     user: userObj,
     token: userToken,
+    canAccess: JSON.parse(subscription),
   };
 }
 

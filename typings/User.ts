@@ -1,6 +1,7 @@
 export type UserDataCookies = {
   token: string;
   user: User;
+  canAccess: string[];
 };
 
 export type User = {

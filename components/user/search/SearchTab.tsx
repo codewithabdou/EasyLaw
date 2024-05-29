@@ -10,11 +10,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SupremeCourtSearchForm from "./forms/SupremeCourtSearchForm";
 import { useRouter } from "next/navigation";
+import NoService from "../shared/NoService";
 
 export function SearchTab({
   query,
+  canAccessSupremeCourt,
 }: {
   query: { search_type: string | undefined };
+  canAccessSupremeCourt?: boolean;
 }) {
   const router = useRouter();
   return (
@@ -57,7 +60,10 @@ export function SearchTab({
             <CardDescription>المحكمة العليا</CardDescription>
           </CardHeader>
           <CardContent>
-            <SupremeCourtSearchForm query={query} />
+            <SupremeCourtSearchForm
+              isBlured={!canAccessSupremeCourt}
+              query={query}
+            />
           </CardContent>
         </Card>
       </TabsContent>

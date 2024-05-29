@@ -6,7 +6,6 @@ import { useInView } from "react-intersection-observer";
 import getSupremeCourtSearchResults from "@/actions/getSupremeCourtSearchResults";
 import React from "react";
 import DecisionCard from "../shared/DecisionCard";
-import { set } from "date-fns";
 
 const DecisionsList = ({
   initiaDecisions,
