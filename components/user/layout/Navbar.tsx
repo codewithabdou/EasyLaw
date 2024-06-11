@@ -43,9 +43,9 @@ const Navbar = ({
     setOpen((prev) => !prev);
     document.body.style.overflow = open ? "auto" : "hidden";
   };
-
+  const home={ name: "الرئيسية", href: "/" };
   const links = [
-    { name: "الرئيسية", href: "/" },
+    
     { name: "عروض الإستعمال", href: "/offers" },
     { name: "محرك البحث", href: "/search" },
     { name: "الإشعارات", href: "/" },
@@ -74,8 +74,14 @@ const Navbar = ({
             </Link>
             <div className={`flex    items-center gap-10`}>
               <div className={`flex    items-center gap-10 font-semibold`}>
+              <Link  href={home.href}>
+                    <p className={`primary-gradient text-primary text-lg`}>
+                      {home.name}
+                    </p>
+                  </Link>
+
                 {links.map((link, index) => (
-                  <Link key={index} href={link.href}>
+                  <Link key={index} href={userDataCookies ? link.href : "/auth/login"}>
                     <p className={`primary-gradient text-primary text-lg`}>
                       {link.name}
                     </p>

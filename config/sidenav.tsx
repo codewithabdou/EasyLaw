@@ -33,8 +33,8 @@ const MODERATOR_SIDENAV_ITEMS = [
     icon: <MdDashboard size={25} />,
   },
   {
-    title: "المستخدمين",
-    path: "/moderator/users",
+    title: "حسابي",
+    path: "/moderator/myProfile",
     icon: <BiUser size={25} />,
   },
 ];

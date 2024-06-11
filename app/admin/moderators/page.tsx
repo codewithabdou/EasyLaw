@@ -28,8 +28,11 @@ const page = async () => {
   }
   return (
     <div className="text-primary">
-      <div className="flex p-4 justify-start">
+      <div className="w-full flex  p-4 justify-between">
         <h1 className="font-bold lg:text-3xl text-2xl">إدارة المسيرين</h1>
+        <Link href="./moderators/addModerator">
+        <Button>إضافة مسير</Button>
+        </Link>
       </div>
       <AdminModeratorsDataTable data={moderators} />
     </div>
