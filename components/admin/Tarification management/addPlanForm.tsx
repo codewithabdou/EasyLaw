@@ -214,9 +214,9 @@ export default function AddPlanForm() {
               )}
             />
           ))}
-          {form.formState.errors.optionalFields  && (
+          {form.formState.errors  && (
             <div className="text-red-500">
-              {form.formState.errors.optionalFields.message}
+             
             </div>
           )}
 

@@ -23,7 +23,7 @@ async function page({
     typeof searchParams?.checkout_id === "string" ? true : false;
 
   const sub = (await getSubs()) as Subscription;
-
+   console.log(sub);
   const plans = await getPlans();
 
   if (!plans) {
