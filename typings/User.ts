@@ -3,6 +3,10 @@ export type UserDataCookies = {
   user: User;
   canAccess: string[];
 };
+export type UserDataCookiesMod = {
+  token: string;
+  user: User;
+};
 
 export type User = {
   id: number;

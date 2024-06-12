@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import API_INFO from "@config/apiRoutes";
-import { User, UserDataCookies } from "@typings/User";
+import { User, UserDataCookies, UserDataCookiesMod } from "@typings/User";
 import getSubs from "@actions/getSubscriptions";
 
 async function login(formData: any) {
@@ -168,6 +168,26 @@ async function getUserDataFromCookies(): Promise<UserDataCookies | null> {
     canAccess: JSON.parse(subscription),
   };
 }
+async function getUserDataFromCookiesMod(): Promise<UserDataCookiesMod | null> {
+  const user = cookies().get("user")?.value;
+  const userToken = cookies().get("token")?.value;
+  if (
+    user === undefined ||
+    user === null ||
+    user.length === 0 ||
+    userToken === undefined ||
+    userToken === null ||
+    userToken.length === 0
+   
+  ) {
+    return null;
+  }
+  const userObj: User = JSON.parse(user);
+  return {
+    user: userObj,
+    token: userToken,
+  };
+}
 
 async function getLoggedInUserInfo(): Promise<User | null> {
   const userId = cookies().get("id")?.value;
@@ -202,4 +222,5 @@ export {
   getUserDataFromCookies,
   getLoggedInUserInfo,
   refreshDataCookies,
+  getUserDataFromCookiesMod
 };
