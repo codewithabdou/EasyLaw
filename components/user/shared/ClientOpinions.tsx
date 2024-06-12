@@ -13,7 +13,7 @@ const ClientOpinions = () => {
   return (
     <div className="w-full my-10 flex flex-col gap-y-[50px] justify-center items-center">
     <div className="flex flex-col">
-    <h1 className="md:text-5xl text-2xl text-[#468590] underline  font-bold z-10">
+    <h1 className="md:text-3xl text-2xl text-[#468590] underline  font-bold z-10">
     آراء العملاء
         </h1>
       <div className="w-full h-[7px] bg-secondary mt-[-7px]"></div>

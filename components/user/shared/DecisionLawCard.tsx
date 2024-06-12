@@ -34,7 +34,7 @@ const DecisionLawCard = ({ decision }: { decision: LawDecision }) => {
                 </CardContent>
                 <CardFooter>
                     <Button variant={"outline"}>
-                        <Link href={`/law/${decision.text_number}`}>اقرأ المزيد</Link>
+                        <Link href={`/law/${decision._id}`}>اقرأ المزيد</Link>
                     </Button>
                 </CardFooter>
             </Card>

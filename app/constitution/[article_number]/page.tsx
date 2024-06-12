@@ -9,7 +9,7 @@ import { MdShare, MdDownload, MdCopyAll, MdSave, MdLink } from "react-icons/md";
 const ConstitutionDetailsPage = async ({
     params,
 }: {
-        params: { article_number: string };
+    params: { article_number: string };
 }) => {
 
 
@@ -24,7 +24,7 @@ const ConstitutionDetailsPage = async ({
         1
     );
 
-    const decision: ConstitutionDecision = data?.data[1];
+    const decision: ConstitutionDecision = data?.data[0];
 
     const operations = [
         <MdShare size={20} />,

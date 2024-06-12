@@ -28,7 +28,7 @@ const ConseilDecisionDetailsPage = async ({
         1
     );
 
-    const decision: ConseilDecision = data?.data[1];
+    const decision: ConseilDecision = data?.data[0];
 
     const operations = [
         <MdShare size={20} />,
