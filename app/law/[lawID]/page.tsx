@@ -1,5 +1,4 @@
-import getLawSearchResults from "@actions/getLawSearchResults";
-import getLawResults from "@actions/getLawSearchResults";
+import getLawSearchById from "@actions/getLawSearchById";
 import { Button } from "@components/ui/button";
 import Footer from "@components/user/layout/Footer";
 import ServerSideNavbar from "@components/user/layout/ServerSideNavbar";
@@ -10,30 +9,18 @@ import { MdShare, MdDownload, MdCopyAll, MdSave, MdLink } from "react-icons/md";
 const LawDetailsPage = async ({
     params,
 }: {
-        params: { text_number: string };
+    params: { lawID: number };
 }) => {
+    // Récupération du numéro de texte depuis les paramètres
+    const lawID = params.lawID;
 
+    // Appel de la fonction pour obtenir les détails de la loi
+    const data = await getLawSearchById(lawID);
 
-    const text_number = params.text_number;
-    const data = await getLawSearchResults(
-        undefined,
-        undefined,
-        undefined,
-        text_number,
-        undefined,
-        {
-            from: undefined,
-            to: undefined,
-        },
-        {
-            from: undefined,
-            to: undefined,
-        },
-        1
-    );
+    // Conversion des données en type LawDecision
+    const decision: LawDecision = data;
 
-    const decision: LawDecision = data?.data[1];
-
+    // Opérations à afficher (icônes)
     const operations = [
         <MdShare size={20} />,
         <MdDownload size={20} />,
@@ -46,15 +33,17 @@ const LawDetailsPage = async ({
         <>
             <ServerSideNavbar />
             <main className="pt-24 px-[5%]">
-                <h1 className="text-primary py-4 font-bold text-4xl ">التفاصيل</h1>
-                <div className="flex justify-end">
+                <h1 className="text-primary py-4 font-bold text-4xl">التفاصيل</h1>
+                <div className="flex justify-end space-x-2">
+                    {/* Affichage des boutons d'opérations */}
                     {operations.map((operation, index) => (
-                        <Button variant={"ghost"} key={index} className="text-primary">
+                        <Button variant="ghost" key={index} className="text-primary">
                             {operation}
                         </Button>
                     ))}
                 </div>
                 <div className="bg-primary w-full h-1 rounded-md mt-1 mb-4" />
+                {/* Affichage des détails de la loi */}
                 <LawDetails decision={decision} />
             </main>
             <Footer />

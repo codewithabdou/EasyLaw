@@ -1,4 +1,5 @@
 type LawDecision = {
+    journal_link: string;
     text_type: string;
     text_number: string;
     journal_date: string;

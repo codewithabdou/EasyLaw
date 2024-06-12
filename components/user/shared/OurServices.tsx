@@ -9,7 +9,7 @@ const OurServices = ()  => {
   return (
     <div className="w-full my-5 flex flex-col gap-y-[10px] justify-center items-center">
       <div className="flex flex-col">
-        <h1 className="md:text-5xl text-2xl text-[#468590] underline  font-bold z-10">
+        <h1 className="md:text-3xl text-2xl text-[#468590] underline  font-bold z-10">
         خدماتنا
         </h1>
       </div>

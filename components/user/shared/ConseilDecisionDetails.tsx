@@ -2,7 +2,6 @@ import ConseilDecision from "@typings/ConseilDecision";
 import React from "react";
 
 const ConseilDecisionDetails = ({ decision }: { decision: ConseilDecision }) => {
-    const pdfLink = decision.pdf_link; // Remplacez par votre URL de PDF
 
     return (
         <div className="flex flex-col space-y-8 rounded-md bg-slate-100 lg:w-[70%] py-8 px-3 md:px-[2%]">
@@ -54,9 +53,11 @@ const ConseilDecisionDetails = ({ decision }: { decision: ConseilDecision }) => 
                     </div>
                 </div>
             </div>
-            <div className="pr-4">
-                <iframe src={pdfLink} className="w-full" style={{ minHeight: '80vh' }}></iframe>
-            </div>
+            {decision.pdf_link && (
+                <div className="pr-4">
+                    <iframe src={decision.pdf_link} className="w-full" style={{ minHeight: '80vh' }}></iframe>
+                </div>
+            )}
         </div>
     );
 };
