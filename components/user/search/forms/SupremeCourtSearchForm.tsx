@@ -32,6 +32,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { buildSearchLink } from "@helpers/buildSupremeCourtSearch";
 import { formatDateToYYYYMMDD } from "@helpers/formatDate";
+import { DateRangePicker } from "@components/ui/date-range-picker";
 
 const numbersRegEx = /^[0-9]*$/;
 
@@ -164,54 +165,24 @@ export function SupremeCourtSearchForm({
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="date_range"
                 render={({ field }) => (
-                  <FormItem className="md:w-1/3 w-full">
+                  <FormItem className="md:w-1/3 mt-3 flex flex-col w-full">
                     <FormLabel>تاريخ القرار</FormLabel>
                     <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            id="date"
-                            variant={"outline"}
-                            className={cn(
-                              "w-full justify-start text-left font-normal",
-                              !date && "text-muted-foreground"
-                            )}
-                          >
-                            <IoCalendar className="ml-2  h-4 w-4" />
-                            {date?.from ? (
-                              date.to ? (
-                                <>
-                                  {format(date.from, "yyyy/LL/dd")} -{" "}
-                                  {format(date.to, "yyyy/LL/dd")}
-                                </>
-                              ) : (
-                                format(date.from, "yyyy/LL/dd")
-                              )
-                            ) : (
-                              <span>تاريخ القرار</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            dir="rtl"
-                            locale={arSA}
-                            initialFocus
-                            mode="range"
-                            defaultMonth={date?.from}
-                            selected={date}
-                            onSelect={(value) => {
-                              setDate(value);
-                              field.onChange(value);
-                            }}
-                            numberOfMonths={2}
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <DateRangePicker
+                        onUpdate={(values) => {
+                          field.onChange(values.range);
+                          setDate(values.range);
+                        }}
+                        initialDateFrom={""}
+                        initialDateTo={""}
+                        align="start"
+                        showCompare={false}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

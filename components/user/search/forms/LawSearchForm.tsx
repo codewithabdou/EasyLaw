@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { arSA } from "date-fns/locale";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,23 +16,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@components/ui/switch";
-import { IoCalendar } from "react-icons/io5";
-import { format } from "date-fns";
+
 import { DateRange } from "react-day-picker";
 
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { buildLawSearchLink } from "@helpers/buildLawSearch";
 import { formatDateToYYYYMMDD } from "@helpers/formatDate";
-
-const numbersRegEx = /^[0-9]*$/;
+import { DateRangePicker } from "@components/ui/date-range-picker";
 
 const FormSchema = z.object({
   search_query: z.string().optional(),
@@ -64,6 +54,13 @@ export function LawSearchForm({
   isBlured?: boolean;
 }) {
   const [date, setDate] = React.useState<DateRange | undefined>({
+    from: undefined,
+    to: undefined,
+  });
+
+  const [dateSignature, setDateSignature] = React.useState<
+    DateRange | undefined
+  >({
     from: undefined,
     to: undefined,
   });
@@ -233,112 +230,53 @@ export function LawSearchForm({
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="date_range"
-              render={({ field }) => (
-                <FormItem className="md:w-1/3 w-full">
-                  <FormLabel>المنشورة بين :</FormLabel>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          id="date"
-                          variant={"outline"}
-                          className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !date && "text-muted-foreground"
-                          )}
-                        >
-                          <IoCalendar className="ml-2  h-4 w-4" />
-                          {date?.from ? (
-                            date.to ? (
-                              <>
-                                {format(date.from, "yyyy/LL/dd")} -{" "}
-                                {format(date.to, "yyyy/LL/dd")}
-                              </>
-                            ) : (
-                              format(date.from, "yyyy/LL/dd")
-                            )
-                          ) : (
-                            <span>تاريخ القرار</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          dir="rtl"
-                          locale={arSA}
-                          initialFocus
-                          mode="range"
-                          defaultMonth={date?.from}
-                          selected={date}
-                          onSelect={(value) => {
-                            setDate(value);
-                            field.onChange(value);
-                          }}
-                          numberOfMonths={2}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="signature_date_range"
-              render={({ field }) => (
-                <FormItem className="md:w-1/3 w-full">
-                  <FormLabel>الممضي بين : </FormLabel>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          id="date"
-                          variant={"outline"}
-                          className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !date && "text-muted-foreground"
-                          )}
-                        >
-                          <IoCalendar className="ml-2  h-4 w-4" />
-                          {date?.from ? (
-                            date.to ? (
-                              <>
-                                {format(date.from, "yyyy/LL/dd")} -{" "}
-                                {format(date.to, "yyyy/LL/dd")}
-                              </>
-                            ) : (
-                              format(date.from, "yyyy/LL/dd")
-                            )
-                          ) : (
-                            <span>تاريخ القرار</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          dir="rtl"
-                          locale={arSA}
-                          initialFocus
-                          mode="range"
-                          defaultMonth={date?.from}
-                          selected={date}
-                          onSelect={(value) => {
-                            setDate(value);
-                            field.onChange(value);
-                          }}
-                          numberOfMonths={2}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex w-full md:items-center gap-6 items-start  flex-col md:flex-row">
+              <FormField
+                control={form.control}
+                name="date_range"
+                render={({ field }) => (
+                  <FormItem className="md:w-1/3 mt-3 flex flex-col w-full">
+                    <FormLabel>المنشورة بين :</FormLabel>
+                    <FormControl>
+                      <DateRangePicker
+                        onUpdate={(values) => {
+                          field.onChange(values.range);
+                          setDate(values.range);
+                        }}
+                        initialDateFrom={""}
+                        initialDateTo={""}
+                        align="start"
+                        showCompare={false}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="signature_date_range"
+                render={({ field }) => (
+                  <FormItem className="md:w-1/3 mt-3 flex flex-col w-full">
+                    <FormLabel>الممضي بين : </FormLabel>
+                    <FormControl>
+                      <DateRangePicker
+                        onUpdate={(values) => {
+                          field.onChange(values.range);
+                          setDateSignature(values.range);
+                        }}
+                        initialDateFrom={""}
+                        initialDateTo={""}
+                        align="start"
+                        showCompare={false}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </>
         )}
         <Button type="submit">بحث</Button>
