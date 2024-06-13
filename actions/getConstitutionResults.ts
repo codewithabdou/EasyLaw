@@ -1,6 +1,7 @@
 "use server";
 
 import { buildSearchConstitutionQuery } from "@helpers/buildSearchConstitutionLink";
+import { cookies } from "next/headers";
 
 async function getConstitutionResults(
   search_query: string | undefined,
@@ -26,6 +27,7 @@ async function getConstitutionResults(
 
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies().get("token")?.value}`,
       },
       next: {
         tags: ["constitution-search"],

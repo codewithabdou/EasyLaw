@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -39,6 +39,13 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { buildSearchConstitutionLink } from "@helpers/buildSearchConstitutionLink";
 import { formatDateToYYYYMMDD } from "@helpers/formatDate";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
 
 const numbersRegEx = /^[0-9]*$/;
 
@@ -164,39 +171,38 @@ export function ConstitutionSearchForm({
                 control={form.control}
                 name="section_name"
                 render={({ field }) => (
-                  <FormItem className="md:w-1/3 w-full">
+                  <FormItem className="md:w-1/3 w-full flex flex-col mt-3">
                     <FormLabel>اسم الباب</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger dir="rtl">
+                          <SelectValue placeholder="اسم الباب" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {[
+                          "الديباجة",
+                          "المبادئ العامة التي تحكم المجتمع الجزائري",
+                          "الحقوق الأساسية والحريات العامة والواجبات",
+                          " تنظيم السلطات والفصل بينها",
+                          " مؤسسات الرقابة",
+                          " الهيئات الاسـتـشـاريـة",
+                          "التعديل الدستوري",
+                        ].map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {status}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                    <FormControl>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Input
-                            placeholder="اختر الباب"
-                            value={field.value || ""}
-                            readOnly
-                            className="w-full cursor-pointer bg-white rounded-md border border-gray-300 shadow-sm focus:outline-none focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                          />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className=" absolute z-10 mt-2 w-full max-w-md bg-white rounded-md border border-gray-300 shadow-lg">
-                          {["الديباجة", "المبادئ العامة التي تحكم المجتمع الجزائري", "الحقوق الأساسية والحريات العامة والواجبات", " تنظيم السلطات والفصل بينها", " مؤسسات الرقابة", " الهيئات الاسـتـشـاريـة", "التعديل الدستوري"].map((item, index) => (
-                            <DropdownMenuItem
-                              key={index}
-                              onSelect={() => field.onChange(item)}
-                              className="w-full block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100"
-                            >
-                              {item}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-
-
             </div>
             <div className="flex w-full md:items-center gap-6 items-start  flex-col md:flex-row">
               <FormField

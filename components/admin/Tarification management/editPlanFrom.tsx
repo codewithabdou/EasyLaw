@@ -7,7 +7,14 @@ import { useRouter } from "next/navigation";
 import { AddPlanRequest, addPlanFormSchema } from "@typings/addPlan";
 import { GiCancel } from "react-icons/gi";
 import { MdDone } from "react-icons/md";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Button } from "@components/ui/button";
 import { Checkbox } from "@components/ui/checkbox";
@@ -20,10 +27,10 @@ import modifyPlan from "@actions/modifyPlan";
 
 const formSchema = addPlanFormSchema;
 
-export default function EditPlanForm(plan:Plan) {
+export default function EditPlanForm(plan: Plan) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-console.log("plan");
+  console.log("plan");
 
   const form = useForm<AddPlanRequest>({
     resolver: zodResolver(formSchema),
@@ -43,15 +50,15 @@ console.log("plan");
   });
 
   async function onSubmit(values: AddPlanRequest) {
-    const parsedValues:any = {
-        ...values,
-        price_month: parseFloat(values.price_month),
-        price_year: parseFloat(values.price_year),
-      };
-      setIsLoading(true);
-      parsedValues.id=plan.id;
-      await modifyPlan(parsedValues);
-    
+    const parsedValues: any = {
+      ...values,
+      price_month: parseFloat(values.price_month),
+      price_year: parseFloat(values.price_year),
+    };
+    setIsLoading(true);
+    parsedValues.id = plan.id;
+    await modifyPlan(parsedValues);
+
     setIsLoading(false);
   }
 
@@ -85,14 +92,11 @@ console.log("plan");
   return (
     <div className="flex flex-col">
       <div className="flex flex-col items-start gap-y-3">
-      <h1 className="font-bold text-3xl">   تعديل  العرض</h1>
-      <div className="w-full flex justify-between p-5 items-center">
-      
-        <h1 className="text-2xl">الرجاء ملئ الإستمارة التالية</h1>
-        <img src={IMAGES.PAYEMENT_ILLUSTRATION}
-        className="w-96 h-96"></img>
-      </div>
-       
+        <h1 className="font-bold text-3xl"> تعديل العرض</h1>
+        <div className="w-full flex justify-between p-5 items-center">
+          <h1 className="text-2xl">الرجاء ملئ الإستمارة التالية</h1>
+          <img src={IMAGES.PAYEMENT_ILLUSTRATION} className="w-96 h-96"></img>
+        </div>
       </div>
       <Form {...form}>
         <form
@@ -159,33 +163,39 @@ console.log("plan");
             <FormField
               key={access.id}
               control={form.control}
-              name={access.id as "name" | "description" | "price_month" | "price_year" | "active" | "has_search_supreme_court" | "has_search_laws" | "has_search_constitution" | "has_search_conseil" | "has_notifications_access" | "has_gpt_access"}
+              name={
+                access.id as
+                  | "name"
+                  | "description"
+                  | "price_month"
+                  | "price_year"
+                  | "active"
+                  | "has_search_supreme_court"
+                  | "has_search_laws"
+                  | "has_search_constitution"
+                  | "has_search_conseil"
+                  | "has_notifications_access"
+                  | "has_gpt_access"
+              }
               render={({ field }) => (
                 <FormItem>
-                    <div className="flex justify-between w-full">
+                  <div className="flex justify-between w-full">
                     <div className="w-64">
-                    <FormLabel>{access.label}</FormLabel>
+                      <FormLabel>{access.label}</FormLabel>
                     </div>
-                  <FormControl>
-                    <Checkbox
-                    className="mx-10"
-                      checked={field.value as CheckedState | undefined}
-                      onCheckedChange={(checked) => field.onChange(checked)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                    </div>
-                    
-                  
+                    <FormControl>
+                      <Checkbox
+                        className="mx-10"
+                        checked={field.value as CheckedState | undefined}
+                        onCheckedChange={(checked) => field.onChange(checked)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
           ))}
-          {form.formState.errors.optionalFields  && (
-            <div className="text-red-500">
-              {form.formState.errors.optionalFields.message}
-            </div>
-          )}
 
           <div className="flex lg:px-2 pt-6 justify-end">
             <Button type="submit">

@@ -1,6 +1,7 @@
 "use server";
 
 import { buildSearchQuery } from "@helpers/buildSupremeCourtSearch";
+import { cookies } from "next/headers";
 
 async function getSupremeCourtSearchResults(
   search_query: string | undefined,
@@ -24,12 +25,14 @@ async function getSupremeCourtSearchResults(
 
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies().get("token")?.value}`,
       },
       next: {
         tags: ["supreme-court-search"],
       },
     });
-    return res.json();
+    const returnData = await res.json();
+    return returnData;
   } catch (error) {
     console.error(error);
   }

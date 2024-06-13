@@ -126,6 +126,7 @@ const SearchPage = async ({
 
   const userDataCookies = await getUserDataFromCookies();
   const canAccess = userDataCookies?.canAccess;
+
   const canAccessSupremeCourt = canAccess?.includes("search-supreme-court");
   const canAccessConstitution = canAccess?.includes("search-constitution");
   const canAccessConseil = canAccess?.includes("search-conseil");

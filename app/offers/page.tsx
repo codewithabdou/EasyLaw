@@ -13,6 +13,8 @@ import { Subscription } from "@typings/subs";
 import { cookies } from "next/headers";
 import { formatDateString } from "@helpers/dateFormatter";
 import DataCookiesRefresher from "@components/user/shared/DataCookiesRefresher";
+import Footer from "@components/user/layout/Footer";
+import { Plan } from "@typings/Plan";
 
 async function page({
   searchParams,
@@ -23,29 +25,33 @@ async function page({
     typeof searchParams?.checkout_id === "string" ? true : false;
 
   const sub = (await getSubs()) as Subscription;
-   console.log(sub);
-  const plans = await getPlans();
+  console.log(sub);
+  const plans: Plan[] | null = await getPlans();
 
   if (!plans) {
     return (
-      <div className="flex flex-col gap-6 justify-center items-center">
-        <Image
-          src={IMAGES.SEARCH_ERROR}
-          alt="Search error"
-          width={300}
-          height={300}
-        />
-        <p className="text-center text-sm bg-red-200 rounded-md max-w-[40ch] text-red-600 p-2">
-          يرجى التحقق من البيانات المدخلة
-        </p>
-        <Link href={`/`}>
-          <Button>الذهاب إلى الصفحة الرئيسية</Button>
-        </Link>
+      <div className="min-h-screen">
+        <ServerSideNavbar />
+        <div className="flex flex-col gap-6 justify-center items-center">
+          <Image
+            src={IMAGES.SEARCH_ERROR}
+            alt="Search error"
+            width={300}
+            height={300}
+          />
+          <p className="text-center text-sm bg-red-200 rounded-md max-w-[40ch] text-red-600 p-2">
+            يرجى التحقق من البيانات المدخلة
+          </p>
+          <Link href={`/`}>
+            <Button>الذهاب إلى الصفحة الرئيسية</Button>
+          </Link>
+        </div>
+        <Footer />
       </div>
     );
   }
 
-  const activePlans = plans.filter((plan) => plan.active);
+  const activePlans = plans ? plans.filter((plan) => plan.active) : [];
   const stringUser = cookies().get("user")?.value as string;
   const user = JSON.parse(stringUser);
   const format = "YYYY/MM/DD";
@@ -111,6 +117,7 @@ async function page({
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

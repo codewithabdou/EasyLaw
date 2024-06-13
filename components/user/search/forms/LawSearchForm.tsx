@@ -24,6 +24,13 @@ import { useRouter } from "next/navigation";
 import { buildLawSearchLink } from "@helpers/buildLawSearch";
 import { formatDateToYYYYMMDD } from "@helpers/formatDate";
 import { DateRangePicker } from "@components/ui/date-range-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
 
 const FormSchema = z.object({
   search_query: z.string().optional(),
@@ -174,28 +181,62 @@ export function LawSearchForm({
                 render={({ field }) => (
                   <FormItem className="md:w-1/3 w-full">
                     <FormLabel> القطاع :</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder=" (مثال: رئاسة الجمهورية) :"
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger dir="rtl">
+                          <SelectValue placeholder=" القطاع" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {[
+                          "التخطيط",
+                          "التربية والتعليم العالي",
+                          "الداخلية والجماعات المحلية",
+                        ].map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {status}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="ministry"
                 render={({ field }) => (
                   <FormItem className="md:w-1/3 w-full">
                     <FormLabel> الوزارة :</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="(مثال: امانة عامة حكومة) :"
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger dir="rtl">
+                          <SelectValue placeholder=" الوزارة" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {[
+                          "وزارة الدفاع الوطني",
+                          "وزارة الشؤون الخارجية",
+                          "وزارة الدولة مكلفة بالمالية والتخطيط",
+                          "وزارة العدل",
+                        ].map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {status}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -215,15 +256,33 @@ export function LawSearchForm({
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="text_type"
                 render={({ field }) => (
                   <FormItem className="md:w-1/3 w-full">
                     <FormLabel> النوع :</FormLabel>
-                    <FormControl>
-                      <Input placeholder="(مثال: مرسوم) :" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger dir="rtl">
+                          <SelectValue placeholder=" النوع" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {["قانون", "قرار وزاري مشترك", "مرسوم"].map(
+                          (status) => (
+                            <SelectItem key={status} value={status}>
+                              {status}
+                            </SelectItem>
+                          )
+                        )}
+                      </SelectContent>
+                    </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}

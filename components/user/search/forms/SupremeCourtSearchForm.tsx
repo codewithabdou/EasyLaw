@@ -33,6 +33,13 @@ import { useRouter } from "next/navigation";
 import { buildSearchLink } from "@helpers/buildSupremeCourtSearch";
 import { formatDateToYYYYMMDD } from "@helpers/formatDate";
 import { DateRangePicker } from "@components/ui/date-range-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
 
 const numbersRegEx = /^[0-9]*$/;
 
@@ -196,9 +203,33 @@ export function SupremeCourtSearchForm({
                 render={({ field }) => (
                   <FormItem className="md:w-1/3 w-full">
                     <FormLabel>موضوع القرار</FormLabel>
-                    <FormControl>
-                      <Input placeholder="موضوع القرار" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger dir="rtl">
+                          <SelectValue placeholder="موضوع القرار" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {[
+                          "محاولة",
+                          "محجوزات",
+                          "محرر رسمي",
+                          "محضر المرافعات",
+                          "محضر قضائي",
+                          "محكمة الجنايات",
+                          "محل تجاري",
+                          "مخدرات",
+                        ].map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {status}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -207,7 +238,7 @@ export function SupremeCourtSearchForm({
                 control={form.control}
                 name="search_field"
                 render={({ field }) => (
-                  <FormItem className="md:w-1/3 w-full">
+                  <FormItem className="md:w-1/3 w-full hidden">
                     <FormLabel>حقل البحث</FormLabel>
                     <FormControl>
                       <Input placeholder="حقل البحث" {...field} />
